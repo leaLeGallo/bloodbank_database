@@ -1,21 +1,21 @@
-recipientID;firstName;lastName;DateOfBirth;Adress;phoneNumber;Email;bloodType
-1;Merit ;Lawson;23.8.1959;841 Cnterbury St. Hopewell Junction, NY 12533;661-735-3400;merit59@gmail.com;O+
-2;Cody;Mould;14.5.2015;18 Lookout St. Bardstown, KY 40004;314-544-7183;mouldman@outlook.com;O+
-3;Ellery;Henderson;27.1.1982;96 Devon Ave. Atlanta, GA 30303;979-418-6043;elllerysellery@gmail.com;A+
-4;Kermit;Samuels;8.4.1930;7166 East Myrtle Lane Amarillo, TX 79106;860-599-8770;kermit_not_the_frog@gmail.com;O-
-5;Bryony;Nye;17.7.2018;41 W. Leatherwood Street Goose Creek, SC 29445;205-799-0917;b_nye@hotmail.com;O+
-6;Ronan;Quickly;15.5.2012;11 North Trout Ave. Calumet City, IL 60409;717-991-3841;ronanthebarbarian@gmail.com;O+
-7;Merlyn;Piper;29.9.1981;696 East Lawrence St. North Andover, MA 01845;715-905-1041;thepipe@gmail.com;O+
-8;King;Oliver;16.10.2017;477 Beech Street Kingsport, TN 37660;404-887-1295;king_oliver@outlook.com;A+
-9;Chanel;Haward;24.2.2009;7402 Shipley Ave. Duluth, GA 30096;740-250-6655;chanel09@gmail.com;A+
-10;Moriah;Abram;17.12.1971;885 Joy Ridge St. Norman, OK 73072;518-820-9624;abram1971@gmail.com;B+
-11;Carla;Payton;17.9.1933;309 W. Harvey Dr. Defiance, OH 43512;303-245-0946;sweetpayton@gmail.com;A+
-12;Hillary;Dyson;8.9.2010;85 Longbranch Rd. Hyde Park, MA 02136;763-765-6616;hilly10@gmail.com;O+
-13;Flotilla;Rowland;25.4.2005;9317 Leatherwood St. Chandler, AZ 85224;360-801-1635;tillatilla@outlook.com;O+
-14;Tawnie;Nichols;19.12.1969;431 Bridle Ave. Camp Hill, PA 17011;989-646-6444;tawnie69@gmail.com;O+
-15;Lee;Jekyll;4.11.1989;7595 Virginia Court Joliet, IL 60435;229-969-7998;dr_jekyll@gmail.com;A+
-16;Patti;Fairburn;5.12.1985;9935 Carson Dr. Buffalo Grove, IL 60089;201-585-4984;pattiskratti@gmail.com;A+
-17;Gypsy;David;27.7.2020;7887 North Applegate Avenue Rocklin, CA 95677;256-652-9438;davidfamiliy@gmail.com;O+
-18;Jerrie;Allison;10.7.1984;239 Lakeshore Avenue Hollis, NY 11423;815-285-0661;jerrithecherry@gmail.com;O+
-19;Courtney;Brinley;20.11.2012;7283 Rockcrest Street Inman, SC 29349;716-681-0661;brinley10@gmail.com;A-
-20;Tania;Eccleston;17.12.2005;9976C N. Acacia St. Neenah, WI 54956;310-226-2651;eccleston@outlook.com;A+
+recipientID,firstName,lastName,DateOfBirth,Adress,phoneNumber,Email,bloodType
+1,Merit,Lawson,23.8.1959,841 Cnterbury St. Hopewell Junction. NY 12533,661-735-3400,merit59@gmail.com,O+
+2,Cody,Mould,14.5.2015,18 Lookout St. Bardstown. KY 40004,314-544-7183,mouldman@outlook.com,O+
+3,Ellery,Henderson,27.1.1982,96 Devon Ave. Atlanta. GA 30303,979-418-6043,elllerysellery@gmail.com,A+
+4,Kermit,Samuels,8.4.1930,7166 East Myrtle Lane Amarillo. TX 79106,860-599-8770,kermit_not_the_frog@gmail.com,O-
+5,Bryony,Nye,17.7.2018,41 W. Leatherwood Street Goose Creek. SC 29445,205-799-0917,b_nye@hotmail.com,O+
+6,Ronan,Quickly,15.5.2012,11 North Trout Ave. Calumet City. IL 60409,717-991-3841,ronanthebarbarian@gmail.com,O+
+7,Merlyn,Piper,29.9.1981,696 East Lawrence St. North Andover. MA 01845,715-905-1041,thepipe@gmail.com,O+
+8,King,Oliver,16.10.2017,477 Beech Street Kingsport. TN 37660,404-887-1295,king_oliver@outlook.com,A+
+9,Chanel,Haward,24.2.2009,7402 Shipley Ave. Duluth. GA 30096,740-250-6655,chanel09@gmail.com,A+
+10,Moriah,Abram,17.12.1971,885 Joy Ridge St. Norman. OK 73072,518-820-9624,abram1971@gmail.com,B+
+11,Carla,Payton,17.9.1933,309 W. Harvey Dr. Defiance. OH 43512,303-245-0946,sweetpayton@gmail.com,A+
+12,Hillary,Dyson,8.9.2010,85 Longbranch Rd. Hyde Park. MA 02136,763-765-6616,hilly10@gmail.com,O+
+13,Flotilla,Rowland,25.4.2005,9317 Leatherwood St. Chandler. AZ 85224,360-801-1635,tillatilla@outlook.com,O+
+14,Tawnie,Nichols,19.12.1969,431 Bridle Ave. Camp Hill. PA 17011,989-646-6444,tawnie69@gmail.com,O+
+15,Lee,Jekyll,4.11.1989,7595 Virginia Court Joliet. IL 60435,229-969-7998,dr_jekyll@gmail.com,A+
+16,Patti,Fairburn,5.12.1985,9935 Carson Dr. Buffalo Grove. IL 60089,201-585-4984,pattiskratti@gmail.com,A+
+17,Gypsy,David,27.7.2020,7887 North Applegate Avenue Rocklin. CA 95677,256-652-9438,davidfamiliy@gmail.com,O+
+18,Jerrie,Allison,10.7.1984,239 Lakeshore Avenue Hollis. NY 11423,815-285-0661,jerrithecherry@gmail.com,O+
+19,Courtney,Brinley,20.11.2012,7283 Rockcrest Street Inman. SC 29349,716-681-0661,brinley10@gmail.com,A-
+20,Tania,Eccleston,17.12.2005,9976C N. Acacia St. Neenah. WI 54956,310-226-2651,eccleston@outlook.com,A+
