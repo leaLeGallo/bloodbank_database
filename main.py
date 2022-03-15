@@ -26,4 +26,10 @@ else:
 
 
 # QUERIES
+table = input("what table: ")
+query = q.show_table(table)
 
+bb.cursor.execute(query)
+fetch = bb.cursor.fetchall()
+for f in fetch:
+    print(f)
