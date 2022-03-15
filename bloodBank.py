@@ -109,6 +109,7 @@ def create_tables_donations(cursor):
                  "  donorID int(100)," \
                  "  date date," \
                  "  quantity int(100)," \
+                 "  expired int(1)," \
                  "  PRIMARY KEY (donationsID)" \
                  ") ENGINE=InnoDB"
     try:
@@ -130,8 +131,8 @@ def insert_into_donations(cursor):
         # iterates through the rows
         for row in donationsfile:
             try: # adding the values of each rows 
-                cursor.execute("INSERT INTO donations(donorID, date, quantity)"\
-                               "VALUES (%s, %s, %s);", row)
+                cursor.execute("INSERT INTO donations(donorID, date, quantity, expired)"\
+                               "VALUES (%s, %s, %s, %s);", row)
             except mysql.connector.Error as err:
                 print(err.msg)
             else:
