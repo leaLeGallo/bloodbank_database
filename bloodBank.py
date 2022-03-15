@@ -2,21 +2,25 @@ import mysql.connector
 from mysql.connector import errorcode
 import csv
 
-cnx= mysql.connector.connect(user='root', password='root', host='127.0.0.1:8889', unix_socket= '/Applications/MAMP/tmp/mysql/mysql.sock')
+# Connects to SQL server
+cnx = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1')
+cursor = cnx.cursor()
 
 
 DATABASE_NAME = 'BloodBank' 
 
 cursor = cnx.cursor() 
 
-def creating_databases(cursor, DATABASE_NAME): # create the database in mysql
+# creates the database in mysql
+def creating_databases(cursor, DATABASE_NAME): 
     try:
         cursor.execute("Create database {} DEFAULT CHARACTER SET 'utf8'".format(DATABASE_NAME)) # try to create is
     except mysql.connector.Error as err:
         print("Failed to create database {}".format(err)) # if not error
         exit(1)
 
-def create_tables_donors(cursor): # function to create tables in database
+# creates table donors in database
+def create_tables_donors(cursor): 
     create_donors = "CREATE TABLE donors (" \
                  "  donorID int(100) NOT NULL AUTO_INCREMENT," \
                  "  firstName varchar(10)," \
@@ -38,7 +42,8 @@ def create_tables_donors(cursor): # function to create tables in database
             print(err.msg)
     else:
         print("Table donors created") # worked
-        
+
+#populates the donors database    
 def insert_into_donors(cursor):
     # reads the planets.csv file
     with open("donors.csv", "r") as donorsfile:
@@ -56,7 +61,8 @@ def insert_into_donors(cursor):
                 cnx.commit()
         print("Values inserted into the donors table.")
 
-def create_tables_recipients(cursor): # function to create tables in database
+# creates table recipients in database
+def create_tables_recipients(cursor): 
     create_recipients = "CREATE TABLE recipients (" \
                  "  recipientsID int(100) NOT NULL AUTO_INCREMENT," \
                  "  firstName varchar(10)," \
@@ -78,13 +84,14 @@ def create_tables_recipients(cursor): # function to create tables in database
             print(err.msg)
     else:
         print("Table recipients created") # worked
-        
+
+# populates the recipients table   
 def insert_into_recipients(cursor):
-    with open("recipients.csv", "r") as transfusionfile:
-        transfusionfile = csv.reader(transfusionfile, delimiter=",")
-        next(transfusionfile) # skips headers 
+    with open("recipients.csv", "r") as recipientsfile:
+        recipientsfile = csv.reader(recipientsfile, delimiter=",")
+        next(recipientsfile) # skips headers 
         # iterates through the rows
-        for row in transfusionfile:
+        for row in recipientsfile:
             try: # adding the values of each rows 
                 cursor.execute("INSERT INTO recipients(firstName, lastName, dateOfBirth, address, phoneNumber, email, bloodType)"\
                                "VALUES (%s, %s, %s, %s, %s, %s, %s);", row)
@@ -95,7 +102,8 @@ def insert_into_recipients(cursor):
                 cnx.commit()
         print("Values inserted into the recipients table.")
 
-def create_tables_donations(cursor): # function to create tables in database
+# creates the donations tables in database
+def create_tables_donations(cursor): 
     create_donations = "CREATE TABLE donations (" \
                  "  donationsID int(100) NOT NULL AUTO_INCREMENT," \
                  "  donorID int(100)," \
@@ -114,12 +122,13 @@ def create_tables_donations(cursor): # function to create tables in database
     else:
         print("Table donations created") # worked
 
+# populates the donations table
 def insert_into_donations(cursor):
-    with open("donations.csv", "r") as transfusionfile:
-        transfusionfile = csv.reader(transfusionfile, delimiter=",")
-        next(transfusionfile) # skips headers 
+    with open("donations.csv", "r") as donationsfile:
+        donationsfile = csv.reader(donationsfile, delimiter=",")
+        next(donationsfile) # skips headers 
         # iterates through the rows
-        for row in transfusionfile:
+        for row in donationsfile:
             try: # adding the values of each rows 
                 cursor.execute("INSERT INTO donations(donorID, date, quantity)"\
                                "VALUES (%s, %s, %s);", row)
@@ -131,7 +140,7 @@ def insert_into_donations(cursor):
         print("Values inserted into the donations table.")
         
 def create_tables_transfusions(cursor): # function to create tables in database
-    create_transfusion = "CREATE TABLE transfusions (" \
+    create_transfusions = "CREATE TABLE transfusions (" \
                  "  transfusionsID int(100) NOT NULL AUTO_INCREMENT," \
                  "  date date," \
                  "  recipientID int(100)," \
@@ -142,7 +151,7 @@ def create_tables_transfusions(cursor): # function to create tables in database
                  ") ENGINE=InnoDB"
     try:
         print("Creating table transfusions: ") # try create tables
-        cursor.execute(create_transfusion)
+        cursor.execute(create_transfusions)
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
             print("already exists.") # error if the tables already exist
