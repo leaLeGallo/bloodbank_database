@@ -1,6 +1,7 @@
 import bloodBank as bb
+import queries as q
 
-
+# creating the database, the tables and populating them
 try:
     bb.cursor.execute("USE {}".format(bb.DATABASE_NAME)) # function to create database
 except bb.mysql.connector.Error as err:
@@ -17,7 +18,12 @@ except bb.mysql.connector.Error as err:
         bb.insert_into_donations(bb.cursor)
         bb.create_tables_transfusions(bb.cursor)
         bb.insert_into_transfusions(bb.cursor)
+        bb.create_stocks_view(bb.cursor)
     else:
         print(err)
 else:
     print("Database {} already exists".format(bb.DATABASE_NAME))
+
+
+# QUERIES
+

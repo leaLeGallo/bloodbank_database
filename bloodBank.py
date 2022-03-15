@@ -10,7 +10,6 @@ cursor = cnx.cursor()
 DATABASE_NAME = 'BloodBank' 
 
 cursor = cnx.cursor() 
-
 # creates the database in mysql
 def creating_databases(cursor, DATABASE_NAME): 
     try:
@@ -23,13 +22,13 @@ def creating_databases(cursor, DATABASE_NAME):
 def create_tables_donors(cursor): 
     create_donors = "CREATE TABLE donors (" \
                  "  donorID int(100) NOT NULL AUTO_INCREMENT," \
-                 "  firstName varchar(10)," \
-                 "  lastName varchar(40)," \
-                 "  dateOfBirth date," \
-                 "  address varchar(50)," \
-                 "  phoneNumber varchar(50)," \
-                 "  email varchar(50)," \
-                 "  bloodType varchar(3)," \
+                 "  firstName varchar(10) NOT NULL," \
+                 "  lastName varchar(40) NOT NULL," \
+                 "  dateOfBirth date NOT NULL," \
+                 "  address varchar(50) NOT NULL," \
+                 "  phoneNumber varchar(50) NOT NULL," \
+                 "  email varchar(50) NOT NULL," \
+                 "  bloodType varchar(3) NOT NULL," \
                  "  PRIMARY KEY (donorID)" \
                  ") ENGINE=InnoDB"
     try:
@@ -177,23 +176,12 @@ def insert_into_transfusions(cursor):
                 cnx.commit()
         print("Values inserted into the transfusions table.")
 
-try:
-    cursor.execute("USE {}".format(DATABASE_NAME)) # function to create database
-except mysql.connector.Error as err:
-    print("Database {} does not exist".format(DATABASE_NAME)) # if it does not exist
-    if err.errno == errorcode.ER_BAD_DB_ERROR:
-        creating_databases(cursor, DATABASE_NAME)
-        print("Database {} created succesfully.".format(DATABASE_NAME)) # if created
-        cnx.database = DATABASE_NAME
-        create_tables_donors(cursor) # calling functions
-        insert_into_donors(cursor)
-        create_tables_recipients(cursor)
-        insert_into_recipients(cursor)
-        create_tables_donations(cursor)
-        insert_into_donations(cursor)
-        create_tables_transfusions(cursor)
-        insert_into_transfusions(cursor)
-    else:
-        print(err)
-else:
-    print("Database {} already exists".format(DATABASE_NAME))
+
+def create_stocks_view(cursor):
+    query = "create view availableStocks as select bloodType, sum(donations.quantity) as stock from donors"\
+            " join donations on donors.donorID = donations.donorID "\
+            " where donations.donationsID not in (select donationsID from transfusions)"\
+            " group by bloodtype"\
+            " order by stock desc"
+    cursor.execute(query)
+
