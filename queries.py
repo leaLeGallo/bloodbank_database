@@ -17,7 +17,12 @@ def nextdonation(wholename, cursor):
     cursor.execute(query)
     donationdate = cursor.fetchone()
     diff = date.today() - donationdate[0]
-    return(f"{wholename} can give blood again in {56 - int(diff.days)} day.s")
+    if (56 - int(diff.days)) < 0:
+        print("smaller")
+        ret = f"{wholename} can give blood now"
+    else:
+        ret = f"{wholename} can give blood again in {56 - int(diff.days)} day.s"
+    return ret
 
 
 def insertdonor(firstname, lastname, dob, add, phone, email, bt, cursor):
