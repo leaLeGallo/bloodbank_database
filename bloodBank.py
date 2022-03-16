@@ -2,6 +2,7 @@ import mysql.connector
 from mysql.connector import errorcode
 import csv
 
+
 # Connects to SQL server
 cnx = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1')
 cursor = cnx.cursor()
