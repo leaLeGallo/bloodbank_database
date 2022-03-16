@@ -1,4 +1,5 @@
 #All queries for the bloodbank application
+from sqlite3 import Cursor
 from tabulate import tabulate
 from datetime import date
 from bloodBank import cnx
@@ -30,3 +31,7 @@ def insertdonor(firstname, lastname, dob, add, phone, email, bt, cursor):
            f"values ('{firstname}', '{lastname}', '{dob}', '{add}', '{phone}', '{email}', '{bt}');"
     cursor.execute(query)
     cnx.commit()
+
+def deleterow(table, row, cursor):
+    query = f"delete from {table} where {table}ID = {row}"
+    cursor.execute(query)

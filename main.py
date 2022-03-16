@@ -1,10 +1,9 @@
 from bloodBank import *
 import queries as q
-import datetime
 
 # creating the database, the tables and populating them
 try:
-    cursor.execute("USE {}".format(DATABASE_NAME)) # function to create database
+    cursor.execute("USE {}".format(DATABASE_NAME)) # function to use database
 except mysql.connector.Error as err:
     print("Database {} does not exist".format(DATABASE_NAME)) # if it does not exist
     if err.errno == errorcode.ER_BAD_DB_ERROR:
@@ -33,16 +32,16 @@ else:
 
 
 # show any table
-#table = "donors"
-#print(q.show_table(table, cursor))
+table = "donors"
+print(q.show_table(table, cursor))
 
 
 # checks when someone can next give blood
-name = "Kameron Courtenay"
-print(q.nextdonation(name, cursor))
+#name = "Kameron Courtenay"
+#print(q.nextdonation(name, cursor))
 
 # insert a donor
 
 #q.insertdonor("Lea", "Le Gallo", "1998-07-23", "10 rue nouvelle merlevenez", "0767239256", "leacestmoi@hotmail.fr", "O+", cursor)
-
+#q.deleterow("donors", 26, cursor)
 

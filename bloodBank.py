@@ -22,7 +22,7 @@ def creating_databases(cursor, DATABASE_NAME):
 # creates table donors in database
 def create_tables_donors(cursor): 
     create_donors = "CREATE TABLE donors (" \
-                 "  donorID int(100) NOT NULL AUTO_INCREMENT," \
+                 "  donorsID int(100) NOT NULL AUTO_INCREMENT," \
                  "  firstName varchar(10) NOT NULL," \
                  "  lastName varchar(40) NOT NULL," \
                  "  dateOfBirth date NOT NULL," \
