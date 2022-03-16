@@ -35,7 +35,6 @@ def insertdonor(firstname, lastname, dob, add, phone, email, bt, cursor):
 
 # inserts a row into any table
 def insertrow(table, values, cursor):
-
     # HEADERS
     query = f"select * from {table}"
     cursor.execute(query)
@@ -58,6 +57,35 @@ def deleterow(table, row, cursor):
     query = f"delete from {table} where {table}ID = {row}"
     cursor.execute(query)
     cnx.commit()
-    query2 = f"alter table {table} auto_increment = 1"   # reset auto increment
+    query2 = f"alter table {table} auto_increment = 1" # reset auto increment
     cursor.execute(query2)
     cnx.commit()
+
+# checks who can give blood to a given recipient
+def givingblood(wholename, cursor):
+    query = f"select bloodType from recipients where concat (firstName, ' ' , lastName) = '{wholename}'"
+    cursor.execute(query)
+    recblood = cursor.fetchone()
+    if recblood[0] == "O+":
+        query = "select concat (firstName, ' ' , lastName) as name from donors where bloodType = 'O+' or bloodType = 'O-' "
+    elif recblood[0] == "A+":
+        query = "select concat (firstName, ' ' , lastName) as name from donors where bloodType = 'A+' or bloodType = 'A-' or bloodType = 'O+'or bloodType = 'O-' "
+    elif recblood[0] == "B+":
+        query = "select concat (firstName, ' ' , lastName) as name from donors where bloodType = 'B+' or bloodType = 'B-' or bloodType = 'O+'or bloodType = 'O-' "
+    elif recblood[0] == "AB+":
+        query = "select concat (firstName, ' ' , lastName) as name from donors"
+    elif recblood[0] == "A-":
+        query = "select concat (firstName, ' ' , lastName) as name from donors where bloodType = 'A-' or bloodType = 'O-'"
+    elif recblood[0] == "O-":
+        query = "select concat (firstName, ' ' , lastName) as name from donors where bloodType = 'O-'"
+    elif recblood[0] == "B-":
+        query = "select concat (firstName, ' ' , lastName) as name from donors where bloodType = 'B-' or bloodType = 'O-'"
+    elif recblood[0] == "AB-":
+        query = "select concat (firstName, ' ' , lastName) as name from donors where bloodType = 'AB-' or bloodType = 'A-' or bloodType = 'B-' or bloodType = 'O-'"
+    
+    cursor.execute(query)
+    donors = cursor.fetchall()
+    res = ""
+    for don in donors:
+        res += f"• {don[0]} \n"
+    return res

@@ -51,3 +51,6 @@ print("")
 #q.deleterow("donations", 21, cursor)
 
 #print(type(q.insertrow(table, cursor)))
+
+lastname = "Merit Lawson"
+print(q.givingblood(lastname, cursor))
