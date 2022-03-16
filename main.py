@@ -1,7 +1,6 @@
 from bloodBank import *
 import queries as q
-from tabulate import tabulate
-from datetime import date
+import datetime
 
 # creating the database, the tables and populating them
 try:
@@ -34,25 +33,16 @@ else:
 
 
 # show any table
-query = q.show_table("donors")
-cursor.execute(query)
-results = cursor.fetchall()
-headers = [i[0] for i in cursor.description]
-print(tabulate(results, headers, tablefmt='pretty'))
+table = "donors"
+print(q.show_table(table, cursor))
 
-'''
+
 # checks when someone can next give blood
-query = q.nextdonation("Henson")
-cursor.execute(query)
-donationdate = cursor.fetchone()
-today = date.today()
+name = "Blanche Henson"
+print(q.nextdonation(name, cursor))
 
-print(donationdate[0])
-print(" ")
-print(today)
+# insert a donor
 
-diff = today - donationdate[0]
+q.insertdonor("Lea", "Le Gallo", "1998-07-23", "10 rue nouvelle merlevenez", "0767239256", "leacestmoi@hotmail.fr", "O+", cursor)
 
 
-print(56 - int(diff.days))
-'''
