@@ -6,3 +6,6 @@ def show_table(table):
     return query
 
 
+def nextdonation(lastname):
+    query = f"select date from donations join donors on donations.donorID = donors.donorID where lastName = '{lastname}'"
+    return query

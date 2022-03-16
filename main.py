@@ -1,35 +1,58 @@
-import bloodBank as bb
+from bloodBank import *
 import queries as q
+from tabulate import tabulate
+from datetime import date
 
 # creating the database, the tables and populating them
 try:
-    bb.cursor.execute("USE {}".format(bb.DATABASE_NAME)) # function to create database
-except bb.mysql.connector.Error as err:
-    print("Database {} does not exist".format(bb.DATABASE_NAME)) # if it does not exist
-    if err.errno == bb.errorcode.ER_BAD_DB_ERROR:
-        bb.creating_databases(bb.cursor, bb.DATABASE_NAME)
-        print("Database {} created succesfully.".format(bb.DATABASE_NAME)) # if created
-        bb.cnx.database = bb.DATABASE_NAME
-        bb.create_tables_donors(bb.cursor) # calling functions
-        bb.insert_into_donors(bb.cursor)
-        bb.create_tables_recipients(bb.cursor)
-        bb.insert_into_recipients(bb.cursor)
-        bb.create_tables_donations(bb.cursor)
-        bb.insert_into_donations(bb.cursor)
-        bb.create_tables_transfusions(bb.cursor)
-        bb.insert_into_transfusions(bb.cursor)
-        bb.create_stocks_view(bb.cursor)
+    cursor.execute("USE {}".format(DATABASE_NAME)) # function to create database
+except mysql.connector.Error as err:
+    print("Database {} does not exist".format(DATABASE_NAME)) # if it does not exist
+    if err.errno == errorcode.ER_BAD_DB_ERROR:
+        creating_databases(cursor, DATABASE_NAME)
+        print("Database {} created succesfully.".format(DATABASE_NAME)) # if created
+        cnx.database = DATABASE_NAME
+        create_tables_donors(cursor) # calling functions
+        insert_into_donors(cursor)
+        create_tables_recipients(cursor)
+        insert_into_recipients(cursor)
+        create_tables_donations(cursor)
+        insert_into_donations(cursor)
+        create_tables_transfusions(cursor)
+        insert_into_transfusions(cursor)
+        create_stocks_view(cursor)
     else:
         print(err)
 else:
-    print("Database {} already exists".format(bb.DATABASE_NAME))
+    print("Database {} already exists".format(DATABASE_NAME))
+
+
+
 
 
 # QUERIES
-table = input("what table: ")
-query = q.show_table(table)
 
-bb.cursor.execute(query)
-fetch = bb.cursor.fetchall()
-for f in fetch:
-    print(f)
+
+# show any table
+query = q.show_table("donors")
+cursor.execute(query)
+results = cursor.fetchall()
+headers = [i[0] for i in cursor.description]
+print(tabulate(results, headers, tablefmt='pretty'))
+
+'''
+# checks when someone can next give blood
+query = q.nextdonation("Henson")
+cursor.execute(query)
+donationdate = cursor.fetchone()
+today = date.today()
+
+print(donationdate[0])
+print(" ")
+print(today)
+
+diff = today - donationdate[0]
+
+
+print(56 - int(diff.days))
+'''
