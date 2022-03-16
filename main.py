@@ -33,16 +33,16 @@ else:
 
 
 # show any table
-table = "donors"
-print(q.show_table(table, cursor))
+#table = "donors"
+#print(q.show_table(table, cursor))
 
 
 # checks when someone can next give blood
-name = "Blanche Henson"
+name = "Kameron Courtenay"
 print(q.nextdonation(name, cursor))
 
 # insert a donor
 
-q.insertdonor("Lea", "Le Gallo", "1998-07-23", "10 rue nouvelle merlevenez", "0767239256", "leacestmoi@hotmail.fr", "O+", cursor)
+#q.insertdonor("Lea", "Le Gallo", "1998-07-23", "10 rue nouvelle merlevenez", "0767239256", "leacestmoi@hotmail.fr", "O+", cursor)
 
 
