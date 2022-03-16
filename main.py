@@ -32,7 +32,7 @@ else:
 
 
 # show any table
-table = "donors"
+table = "donations"
 #print(q.show_table(table, cursor))
 
 
@@ -42,10 +42,11 @@ table = "donors"
 
 # insert a donor
 
-#print((q.insertdonor("Lea", "Le Gallo", "1998-07-23", "10 rue nouvelle merlevenez", "0767239256", "leacestmoi@hotmail.fr", "O+", cursor)))
+#q.insertdonor("Lea", "Le Gallo", "1998-07-23", "10 rue nouvelle merlevenez", "0767239256", "leacestmoi@hotmail.fr", "O+", cursor)
 print("")
-#q.insertrow(table, cursor)
+#val = ["21", "2019-01-01", "1", "1"]
+#q.insertrow(table, val, cursor)
 
-#q.deleterow("donors", 22, cursor)
+q.deleterow("donations", 21, cursor)
 
 #print(type(q.insertrow(table, cursor)))
