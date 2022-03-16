@@ -23,23 +23,32 @@ def nextdonation(wholename, cursor):
         ret = f"{wholename} can give blood again in {56 - int(diff.days)} day.s"
     return ret
 
+'''
 # interts a donor into the database
 def insertdonor(firstname, lastname, dob, add, phone, email, bt, cursor):
     query = "INSERT INTO donors(firstName, lastName, dateOfBirth, address, phoneNumber, email, bloodType)"\
            f"values ('{firstname}', '{lastname}', '{dob}', '{add}', '{phone}', '{email}', '{bt}');"
-    cursor.execute(query)
-    cnx.commit()
+    print(query)
+    #cursor.execute(query)
+    #cnx.commit()
+'''
 
+# inserts a row into any table
+def insertrow(table, values, cursor):
 
-def insertrow(table, cursor):
+    # HEADERS
     query = f"select * from {table}"
     cursor.execute(query)
-    #cnx.commit()
-    headers = [i[0] for i in cursor.description]
+    headers = [i[0] for i in cursor.description] # inserts the column headers into a list
     headers.pop(0) # deletes the first column header (the index)
-    headers = (', '.join(headers))
+    headers = (', '.join(headers)) # turns list of headers into a single string
+
+    #VALUES
+    (', '.join("'" + value + "'" for value in values)) # turns list of values into a single string
+    values = str(values) 
+
     query = f"INSERT INTO {table}({headers})"\
-            "values ('Lea', 'Le lmao', '1998-07-23', '10 rue nouvelle merlevenez', '0767239256', 'leacestmoi@hotmail.fr', 'O+');"
+            f"values ({values[1:-1]});"
     cursor.execute(query)
     cnx.commit()
 
@@ -49,7 +58,6 @@ def deleterow(table, row, cursor):
     query = f"delete from {table} where {table}ID = {row}"
     cursor.execute(query)
     cnx.commit()
-    # reset auto increment
-    query2 = f"alter table {table} auto_increment = 1"
+    query2 = f"alter table {table} auto_increment = 1"   # reset auto increment
     cursor.execute(query2)
     cnx.commit()
