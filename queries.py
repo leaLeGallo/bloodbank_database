@@ -58,7 +58,6 @@ def deleterow(table, row, cursor):
     query = f"delete from {table} where {table}ID = {row}"
     cursor.execute(query)
     cnx.commit()
-    # reset auto increment
-    query2 = f"alter table {table} auto_increment = 1"
+    query2 = f"alter table {table} auto_increment = 1"   # reset auto increment
     cursor.execute(query2)
     cnx.commit()

@@ -185,3 +185,10 @@ def create_stocks_view(cursor):
             " order by stock desc"
     cursor.execute(query)
 
+def top_saviours_view(cursor):
+    query = "create view top3 as select concat (firstName, ' ' , lastName) as name, count(transfusions.donationsID) as people_saved"\
+            " from donors join donations on donors.donorsID = donations.donorsID"\
+            " join transfusions on transfusions.donationsID = donations.donationsID"\
+            " group by transfusions.donationsID order by people_saved desc limit 3"
+    cursor.execute(query)
+
