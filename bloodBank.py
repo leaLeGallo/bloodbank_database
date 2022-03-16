@@ -5,12 +5,11 @@ import csv
 
 # Connects to SQL server
 cnx = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1')
-cursor = cnx.cursor()
+cursor = cnx.cursor(buffered=True)
 
 
 DATABASE_NAME = 'BloodBank' 
 
-cursor = cnx.cursor() 
 # creates the database in mysql
 def creating_databases(cursor, DATABASE_NAME): 
     try:
@@ -30,7 +29,7 @@ def create_tables_donors(cursor):
                  "  phoneNumber varchar(50) NOT NULL," \
                  "  email varchar(50) NOT NULL," \
                  "  bloodType varchar(3) NOT NULL," \
-                 "  PRIMARY KEY (donorID)" \
+                 "  PRIMARY KEY (donorsID)" \
                  ") ENGINE=InnoDB"
     try:
         print("Creating table donors: ") # try create tables
@@ -106,7 +105,7 @@ def insert_into_recipients(cursor):
 def create_tables_donations(cursor): 
     create_donations = "CREATE TABLE donations (" \
                  "  donationsID int(100) NOT NULL AUTO_INCREMENT," \
-                 "  donorID int(100)," \
+                 "  donorsID int(100)," \
                  "  date date," \
                  "  quantity int(100)," \
                  "  expired int(1)," \
@@ -131,7 +130,7 @@ def insert_into_donations(cursor):
         # iterates through the rows
         for row in donationsfile:
             try: # adding the values of each rows 
-                cursor.execute("INSERT INTO donations(donorID, date, quantity, expired)"\
+                cursor.execute("INSERT INTO donations(donorsID, date, quantity, expired)"\
                                "VALUES (%s, %s, %s, %s);", row)
             except mysql.connector.Error as err:
                 print(err.msg)
@@ -180,7 +179,7 @@ def insert_into_transfusions(cursor):
 
 def create_stocks_view(cursor):
     query = "create view availableStocks as select bloodType, sum(donations.quantity) as stock from donors"\
-            " join donations on donors.donorID = donations.donorID "\
+            " join donations on donors.donorsID = donations.donorsID "\
             " where donations.donationsID not in (select donationsID from transfusions)"\
             " group by bloodtype"\
             " order by stock desc"
