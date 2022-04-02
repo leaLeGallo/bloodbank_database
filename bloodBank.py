@@ -181,7 +181,7 @@ def create_stocks_view(cursor):
     query = "create view availableStocks as select bloodType, sum(donations.quantity) as stock from donors"\
             " join donations on donors.donorsID = donations.donorsID "\
             " where donations.donationsID not in (select donationsID from transfusions)"\
-            " group by bloodtype"\
+            " group by bloodType"\
             " order by stock desc"
     cursor.execute(query)
 

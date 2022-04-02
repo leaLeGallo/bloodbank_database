@@ -31,10 +31,9 @@ else:
 
 # QUERIES
 
-
 # show any table
-table = "donations"
-#print(q.show_table(table, cursor))
+table = "donors"
+print(q.show_table(table, cursor))
 
 
 # checks when someone can next give blood
@@ -45,12 +44,12 @@ table = "donations"
 
 #q.insertdonor("Lea", "Le Gallo", "1998-07-23", "10 rue nouvelle merlevenez", "0767239256", "leacestmoi@hotmail.fr", "O+", cursor)
 print("")
-#val = ["21", "2019-01-01", "1", "1"]
-#q.insertrow(table, val, cursor)
+val = ["21", "2019-01-01", "1", "1"]
+q.insertrow(table, val, cursor)
 
 #q.deleterow("donations", 21, cursor)
 
 #print(type(q.insertrow(table, cursor)))
 
-lastname = "Merit Lawson"
-print(q.givingblood(lastname, cursor))
+#lastname = "Merit Lawson"
+#print(q.givingblood(lastname, cursor))
