@@ -86,8 +86,9 @@ def retrieveGiving(fname, lname):
     lbl.grid(column=0, row=0)
 
 
+r = Tk()
+tree = ttk.Treeview(r)
 
-tree = ttk.Treeview()
 
 firstName=tk.StringVar()
 lastName=tk.StringVar()
@@ -100,7 +101,6 @@ bloodType=tk.StringVar()
 def add_data(tree):
     r = Tk()
     tree = ttk.Treeview(r)
-    
     cursor.execute("SELECT * from Donors")
     
     tree['show'] = 'headings'
@@ -133,7 +133,7 @@ def add_data(tree):
         tree.insert('', i, text="", values=(ro[0], ro[1], ro[2], ro[3], ro[4], ro[5], ro[6], ro[7]))
         i = i + 1
     
-    tree.pack()
+    tree.pack(ipadx='250', ipady='29')
 
     hsb = ttk.Scrollbar(r, orient="horizontal")
     hsb.configure(command=tree.xview)
@@ -144,10 +144,10 @@ def add_data(tree):
     vsb.configure(command=tree.yview)
     tree.configure(yscrollcommand=vsb.set)
     vsb.pack(fill=Y, side = RIGHT)
-    r.geometry("600x600")
+    r.geometry("1050x700")
     r.title("User detail")
-    f=Frame(r, width=400, height=320, background="black")
-    f.place(x=100, y=250)
+    f=Frame(r, width=400, height=400, background="black")
+    f.place(x=300, y=270)
     l1=Label(f, text="First name", width=12, font=('Times', 11, 'bold'))
     e1=Entry(f, textvariable=firstName, width=15)
     l1.place(x=50, y=30)
@@ -210,15 +210,18 @@ def add_data(tree):
         e7.delete(0, END)
         f.destroy()
 
-    # SUBMIT BUTTON
+        
+    deletebutton = tk.Button(f, text="delete", command=lambda: delete_data(tree))
+    deletebutton.place(x=170, y=360)
+
     submitbutton = tk.Button(f, text="Submit", command= insert_data)
     submitbutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
-    submitbutton.place(x=100, y=300)
+    submitbutton.place(x=100, y=320)
 
     # CANCEL BUTTON
     cancelbutton = tk.Button(f, text="cancel", command=f.destroy)
     cancelbutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
-    cancelbutton.place(x=240, y=300)
+    cancelbutton.place(x=240, y=320)
 
 
 
@@ -294,11 +297,13 @@ insert['values']= ("Donors", "Recipients", "Donations", "Transfusions") #insert 
 insert.set("Select Table") # begin with empty box'
 insert.place(x=80, y=340) # pos of combobox
 
+manupbutton = tk.Button(window, text="insert", command=lambda: add_data(tree))
+manupbutton.place(x=100, y=380)
 
-insertbutton = tk.Button(window, text="insert", command=lambda: add_data(tree))
+insertbutton = tk.Button(r, text="insert", command=lambda: add_data(tree))
 insertbutton.place(x=100, y=380)
 
-deletebutton = tk.Button(window, text="delete", command=lambda: delete_data(tree))
+deletebutton = tk.Button(r, text="delete", command=lambda: delete_data(tree))
 deletebutton.place(x=200, y=380)
 
 
