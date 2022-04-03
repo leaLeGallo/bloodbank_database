@@ -136,8 +136,10 @@ def add_data(tree):
 def delete_data(tree):
    selected_item=tree.selection()[0]
    print(tree.item(selected_item)['values'])
-   did=tree.item(selected_item)['values'][1]
-   del_query="DELETE FROM Donors WHERE firstName=%s"
+
+   did=tree.item(selected_item)['values'][0]
+   del_query="DELETE FROM Donors WHERE donorsID=%s"
+
    sel_data=(did,)
    conn.execute(del_query, sel_data)
    connect.commit()
