@@ -7,9 +7,6 @@ from bloodBank import cnx
 def show_table(table, cursor):
     query = f"select * from {table}"
     cursor.execute(query)
-    results = cursor.fetchall()
-    headers = [i[0] for i in cursor.description]
-    return(tabulate(results, headers, tablefmt='pretty'))
 
 # returns a sentence saying how many days are needed for a donor to give blood again
 def nextdonation(wholename, cursor):
@@ -89,3 +86,8 @@ def givingblood(wholename, cursor):
     for don in donors:
         res += f"• {don[0]} \n"
     return res
+
+def findDonor(wholename, table, cursor):
+    query = f"Select * from {table} where concat (firstName, ' ' , lastName) = '{wholename}'"
+    cursor.execute(query)
+    return query
