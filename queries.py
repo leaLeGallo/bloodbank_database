@@ -1,5 +1,4 @@
 #All queries for the bloodbank application
-from tabulate import tabulate
 from datetime import date
 from bloodBank import cnx
 
@@ -7,9 +6,6 @@ from bloodBank import cnx
 def show_table(table, cursor):
     query = f"select * from {table}"
     cursor.execute(query)
-    results = cursor.fetchall()
-    headers = [i[0] for i in cursor.description]
-    return(tabulate(results, headers, tablefmt='pretty'))
 
 # returns a sentence saying how many days are needed for a donor to give blood again
 def nextdonation(wholename, cursor):
@@ -23,15 +19,6 @@ def nextdonation(wholename, cursor):
         ret = f"{wholename} can give blood again in {56 - int(diff.days)} day.s"
     return ret
 
-'''
-# interts a donor into the database
-def insertdonor(firstname, lastname, dob, add, phone, email, bt, cursor):
-    query = "INSERT INTO donors(firstName, lastName, dateOfBirth, address, phoneNumber, email, bloodType)"\
-           f"values ('{firstname}', '{lastname}', '{dob}', '{add}', '{phone}', '{email}', '{bt}');"
-    print(query)
-    #cursor.execute(query)
-    #cnx.commit()
-'''
 
 # inserts a row into any table
 def insertrow(table, values, cursor):
@@ -89,3 +76,9 @@ def givingblood(wholename, cursor):
     for don in donors:
         res += f"• {don[0]} \n"
     return res
+
+def findDonor(wholename, table, cursor):
+    query = f"Select * from {table} where concat(firstName, ' ' , lastName) = '{wholename}'"
+    cursor.execute(query)
+    results = cursor.fetchone()
+    return results
