@@ -92,7 +92,9 @@ def insertToTables():
 
 
 
+
 tree = ttk.Treeview()
+
 
 
 firstName=tk.StringVar()
@@ -295,7 +297,9 @@ insert.set("Select Table") # begin with empty box'
 insert.place(x=80, y=340) # pos of combobox
 
 manupbutton = tk.Button(window, text="insert", command=lambda: add_data(tree))
+
 manupbutton.place(x=150, y=380)
+
 
 
 

@@ -26,6 +26,7 @@ else:
     print("Database {} already exists".format(DATABASE_NAME))
 
 
+
 # QUERIES
 
 '''
@@ -153,3 +154,4 @@ nameButton.grid(column=0, row=12)
 
 
 window.mainloop()
+
