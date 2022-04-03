@@ -2,12 +2,14 @@
 from tabulate import tabulate
 from datetime import date
 from bloodBank import cnx
+import mysql.connector
+
 
 # used to show any table from the database
 def show_table(table, cursor):
     query = f"select * from {table}"
     cursor.execute(query)
-    # results = cursor.fetchall()
+    #results = cursor.fetchall()
     # headers = [i[0] for i in cursor.description]
     return query  #(tabulate(results, headers, tablefmt='pretty'))
 
@@ -23,15 +25,42 @@ def nextdonation(wholename, cursor):
         ret = f"{wholename} can give blood again in {56 - int(diff.days)} day.s"
     return ret
 
-'''
+
 # interts a donor into the database
-def insertdonor(firstname, lastname, dob, add, phone, email, bt, cursor):
+def insertdonor(firstname, lastname, dob, add, phone, email, bt):
     query = "INSERT INTO donors(firstName, lastName, dateOfBirth, address, phoneNumber, email, bloodType)"\
            f"values ('{firstname}', '{lastname}', '{dob}', '{add}', '{phone}', '{email}', '{bt}');"
     print(query)
     #cursor.execute(query)
     #cnx.commit()
-'''
+    
+connection = mysql.connector.connect(user='root', password='root', host='127.0.0.1:8889', unix_socket= '/Applications/MAMP/tmp/mysql/mysql.sock')
+cursor = cnx.cursor(buffered=True)   
+
+def insert_varibles_into_donorstable(firstName, lastName, dateOfBirth,address,phoneNumber,email,bloodType):
+    
+    try: 
+        cursor.execute(
+            "INSERT INTO BloodBank.Donors VALUES(donorsID, firstName, lastName, dateOfBirth,address,phoneNumber,email,bloodType)",
+            {
+                'firstName' : firstName.get(),
+                'lastName' : lastName.get(),
+                'dateOfBirth' : dateOfBirth.get(),
+                'address' : address.get(),
+                'phoneNumber' : phoneNumber.get(),
+                'email' : email.get(),
+                'bloodType' : bloodType.get()
+            }
+        )
+    except mysql.connector.Error as err:
+                print(err.msg)
+    else:
+        # Make sure data is committed to the database
+        cnx.commit()
+        print("Values inserted into the donors table.")
+    
+
+
 
 # inserts a row into any table
 def insertrow(table, values, cursor):
@@ -93,5 +122,5 @@ def givingblood(wholename, cursor):
 def findDonor(firstName, cursor):
     query = f"Select * from donors where firstName = '{firstName}'"
     cursor.execute(query)
-    results = cursor.fetchone()
-    return results
+    return query
+
