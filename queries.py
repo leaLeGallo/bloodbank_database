@@ -1,5 +1,5 @@
 #All queries for the bloodbank application
-from tabulate import tabulate
+
 from datetime import date
 from bloodBank import cnx
 import mysql.connector
@@ -9,9 +9,7 @@ import mysql.connector
 def show_table(table, cursor):
     query = f"select * from {table}"
     cursor.execute(query)
-    #results = cursor.fetchall()
-    # headers = [i[0] for i in cursor.description]
-    return query  #(tabulate(results, headers, tablefmt='pretty'))
+    return query  
 
 # returns a sentence saying how many days are needed for a donor to give blood again
 def nextdonation(wholename, cursor):
@@ -33,11 +31,8 @@ def insertdonor(firstname, lastname, dob, add, phone, email, bt):
     print(query)
     #cursor.execute(query)
     #cnx.commit()
-    
-connection = mysql.connector.connect(user='root', password='root', host='127.0.0.1:8889', unix_socket= '/Applications/MAMP/tmp/mysql/mysql.sock')
-cursor = cnx.cursor(buffered=True)   
 
-def insert_varibles_into_donorstable(firstName, lastName, dateOfBirth,address,phoneNumber,email,bloodType):
+def insert_varibles_into_donorstable(firstName, lastName, dateOfBirth,address,phoneNumber,email,bloodType, cursor):
     
     try: 
         cursor.execute(
@@ -119,7 +114,9 @@ def givingblood(wholename, cursor):
         res += f"• {don[0]} \n"
     return res
 
-def findDonor(firstName, cursor):
-    query = f"Select * from donors where firstName = '{firstName}'"
+def findDonor(wholename, cursor):
+    query = f"Select * from donors where concat (firstName, ' ' ,lastName) = '{wholename}'"
     cursor.execute(query)
+    if cursor.fetchone() == None:
+        query = f"Select * from recipients where concat (firstName, ' ' ,lastName) = '{wholename}'"
     return query

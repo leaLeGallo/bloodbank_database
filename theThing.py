@@ -8,7 +8,7 @@ r = tk.Tk()
 r.geometry("600x600")
 r.title("User detail")
 
-connect = mysql.connector.connect(user='root', password='root', host='127.0.0.1:8889', unix_socket= '/Applications/MAMP/tmp/mysql/mysql.sock', database = 'Bloodbank')
+connect = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1', database = 'Bloodbank')
 conn = connect.cursor(buffered=True)
 
 conn.execute("SELECT * from Donors")
