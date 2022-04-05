@@ -92,9 +92,8 @@ def insertToTables():
 
 
 
-
-tree = ttk.Treeview()
-
+r = Tk()
+tree = ttk.Treeview(r)
 
 
 firstName=tk.StringVar()
@@ -106,8 +105,7 @@ email=tk.StringVar()
 bloodType=tk.StringVar()
  
 def add_data(tree):
-    r = Tk()
-    tree = ttk.Treeview(r)
+    
     cursor.execute("SELECT * from Donors")
     
     tree['show'] = 'headings'
@@ -246,13 +244,16 @@ def delete_data(tree):
 
 # Create the main window
 
-
 window = Tk()
 window.title("The Blood bank app") # window title
 window.geometry('400x450') # window size
 
 
-tablelabel = Label(window, text="Blood Bank Tables") # label for the tables
+
+
+
+
+tablelabel = Label(window, text="Blood Bank Tables", bg='red') # label for the tables
 tablelabel.place(x=130, y=0) # label pos
 # create a combox to choose tables from
 combo = Combobox(window, state = 'readonly') # create combobox
@@ -297,9 +298,7 @@ insert.set("Select Table") # begin with empty box'
 insert.place(x=80, y=340) # pos of combobox
 
 manupbutton = tk.Button(window, text="insert", command=lambda: add_data(tree))
-
 manupbutton.place(x=150, y=380)
-
 
 
 
