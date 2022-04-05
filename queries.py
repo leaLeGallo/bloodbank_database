@@ -2,7 +2,6 @@
 
 from datetime import date
 from bloodBank import cnx
-import mysql.connector
 
 
 # used to show any table from the database
@@ -22,39 +21,6 @@ def nextdonation(wholename, cursor):
     else:
         ret = f"{wholename} can give blood again in {56 - int(diff.days)} day.s"
     return ret
-
-
-# interts a donor into the database
-def insertdonor(firstname, lastname, dob, add, phone, email, bt):
-    query = "INSERT INTO donors(firstName, lastName, dateOfBirth, address, phoneNumber, email, bloodType)"\
-           f"values ('{firstname}', '{lastname}', '{dob}', '{add}', '{phone}', '{email}', '{bt}');"
-    print(query)
-    #cursor.execute(query)
-    #cnx.commit()
-
-def insert_varibles_into_donorstable(firstName, lastName, dateOfBirth,address,phoneNumber,email,bloodType, cursor):
-    
-    try: 
-        cursor.execute(
-            "INSERT INTO BloodBank.Donors VALUES(donorsID, firstName, lastName, dateOfBirth,address,phoneNumber,email,bloodType)",
-            {
-                'firstName' : firstName.get(),
-                'lastName' : lastName.get(),
-                'dateOfBirth' : dateOfBirth.get(),
-                'address' : address.get(),
-                'phoneNumber' : phoneNumber.get(),
-                'email' : email.get(),
-                'bloodType' : bloodType.get()
-            }
-        )
-    except mysql.connector.Error as err:
-                print(err.msg)
-    else:
-        # Make sure data is committed to the database
-        cnx.commit()
-        print("Values inserted into the donors table.")
-    
-
 
 
 # inserts a row into any table

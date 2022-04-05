@@ -78,13 +78,6 @@ def retrieveGiving(fname, lname):
     givingWindow.geometry('300x300')
     lbl.grid(column=0, row=0)
 
-#Can we delete that?
-def insertToTables():
-    name = combo.get()
-    value = []
-    text = q.insertrow(name, value, cursor)
-    return text.append
-
 r = Tk()
 tree = ttk.Treeview(r)
 
@@ -189,10 +182,14 @@ def add_data(tree):
         phone = phoneNumber.get()
         e = email.get()
         bt = bloodType.get()
-        cursor.execute('INSERT INTO Donors(firstName, lastName, dateOfBirth, address, phoneNumber, email, bloodType) VALUES(%s,%s,%s,%s,%s,%s,%s)', (s_firstName, s_lastName, dob, add, phone, e, bt))
+        # adds the data to a list
+        datalist = [s_firstName, s_lastName, dob, add, phone, e, bt]
+        # inserts data into MySQL database
+        q.insertrow("Donors", datalist, cursor)
         print(cursor.lastrowid)
         cnx.commit()
-        tree.insert('', 'end', text="", values=(cursor.lastrowid, s_firstName, s_lastName, dob, add, phone, e, bt))
+        # life-view of data inserting
+        tree.insert('', 'end', text="", values=(31, s_firstName, s_lastName, dob, add, phone, e, bt))
         mb.showinfo("Sucess", "donor registered")
         e1.delete(0, END)
         e2.delete(0, END)
@@ -266,11 +263,11 @@ infoButton.place(x=150, y=135)
 # create entry to find when donors can donate next
 nextdonlabel = Label(window, text="Enter a donor's first  and last name to know when they can donate again")
 nextdonlabel.place(x=55, y=170)
-firstName = Entry(window) # create entry
-firstName.place(x=90, y=195)
-lastName = Entry(window) # create entry
-lastName.place(x=200, y=195)
-nextdonButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow>>', retrieveNextDonation(firstName.get(), lastName.get())))
+frstName = Entry(window) # create entry
+frstName.place(x=90, y=195)
+lstName = Entry(window) # create entry
+lstName.place(x=200, y=195)
+nextdonButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow>>', retrieveNextDonation(frstName.get(), lstName.get())))
 nextdonButton.place(x=150, y=220)
 
 
@@ -292,11 +289,6 @@ insert.place(x=80, y=340) # pos of combobox
 
 manupbutton = tk.Button(window, text="insert", command=lambda: add_data(tree))
 manupbutton.place(x=150, y=380)
-
-
-
-
-
 
 
 
