@@ -280,10 +280,14 @@ def add_data():
         phone = phoneNumber.get()
         e = email.get()
         bt = bloodType.get()
-        cursor.execute('INSERT INTO Donors(firstName, lastName, dateOfBirth, address, phoneNumber, email, bloodType) VALUES(%s,%s,%s,%s,%s,%s,%s)', (s_firstName, s_lastName, dob, add, phone, e, bt))
+        # adds the data to a list
+        datalist = [s_firstName, s_lastName, dob, add, phone, e, bt]
+        # inserts data into MySQL database
+        q.insertrow("Donors", datalist, cursor)
         print(cursor.lastrowid)
         cnx.commit()
-        tree.insert('', 'end', text="", values=(cursor.lastrowid, s_firstName, s_lastName, dob, add, phone, e, bt))
+        # life-view of data inserting
+        tree.insert('', 'end', text="", values=(31, s_firstName, s_lastName, dob, add, phone, e, bt))
         mb.showinfo("Sucess", "donor registered")
         e1.delete(0, END)
         e2.delete(0, END)
