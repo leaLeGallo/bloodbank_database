@@ -1,3 +1,4 @@
+from cProfile import label
 from bloodBank import *
 import queries as q
 from tkinter.ttk import *
@@ -41,71 +42,154 @@ else:
 
 def retrieveTables():
     table = combo.get()
-    newWindow = Tk()
+    newWindow = tk.Tk()
     cursor.execute(q.show_table(table, cursor))
-    headers = [e[0] for e in cursor.description]
+    if (table == 'Donors'):
+        e=Label(newWindow,width=17,text='Donors id',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=0)
+        e=Label(newWindow,width=17,text='First name',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=1)
+        e=Label(newWindow,width=17,text='Last name',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=2)
+        e=Label(newWindow,width=17,text='Date of Birth',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=3)
+        e=Label(newWindow,width=17,text='Address',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=4)
+        e=Label(newWindow,width=17,text='Phone Number',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=5)
+        e=Label(newWindow,width=17,text='Email',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=6)
+        e=Label(newWindow,width=17,text='Blood Type',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=7)
+    elif (table == 'Recipients'):
+        e=Label(newWindow,width=17,text='Recipients id',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=0)
+        e=Label(newWindow,width=17,text='First name',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=1)
+        e=Label(newWindow,width=17,text='Last name',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=2)
+        e=Label(newWindow,width=17,text='Date of Birth',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=3)
+        e=Label(newWindow,width=17,text='Address',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=4)
+        e=Label(newWindow,width=17,text='Phone Number',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=5)
+        e=Label(newWindow,width=17,text='Email',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=6)
+        e=Label(newWindow,width=17,text='Blood Type',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=7)
+    elif (table == 'Donations'):
+        e=Label(newWindow,width=17,text='Number',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=0)
+        e=Label(newWindow,width=17,text='Donors id',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=1)
+        e=Label(newWindow,width=17,text='Date',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=2)
+        e=Label(newWindow,width=17,text='Quantity',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=3)
+        e=Label(newWindow,width=17,text='Expired',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=4)
+    elif (table == 'Transfusions'):
+        e=Label(newWindow,width=17,text='Number',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=0)
+        e=Label(newWindow,width=17,text='Date',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=1)
+        e=Label(newWindow,width=17,text='Recipient id',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=2)
+        e=Label(newWindow,width=17,text='Quantity',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=3)
+        e=Label(newWindow,width=17,text='Blood Type',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=4)
+        e=Label(newWindow,width=17,text='Donation Id',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=5)
+    elif (table == 'AvailableStocks'):
+        e=Label(newWindow,width=17,text='Blood Type',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=0)
+        e=Label(newWindow,width=17,text='Stock',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=1)
+    elif (table == 'Top3'):
+        e=Label(newWindow,width=17,text='Name',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=0)
+        e=Label(newWindow,width=17,text='People Saved',borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=1)
+    
+    
     i = 1
-    for table in cursor: 
-        for j in range(len(table)):
-            e = Entry(newWindow, width=10) 
+    
+    
+    for thing in cursor: 
+        for j in range(len(thing)):
+            e = Label(newWindow,width=17, text=thing[j], borderwidth=2,relief='ridge', anchor="w")  
             e.grid(row=i, column=j) 
-            e.insert(END, table[j])
+            #e.insert(END, person[j])
+            
         i=i+1
 
-def retrieveInfo():
-    infoname = infoentry.get()
+def retrieveInfo(fname, lname):
+    wholename = fname + " " + lname
     infoWindow = Toplevel(window) # creat new window for info
-    cursor.execute(q.findDonor(infoname, cursor))
+    cursor.execute(q.findDonor(wholename, cursor))
     i = 1
-    for infoname in cursor: 
-        for j in range(len(infoname)):
-            e = Entry(infoWindow, width=10) 
+    e=Label(infoWindow,width=17,text='Donors id',borderwidth=2, relief='ridge',anchor='w')
+    e.grid(row=0,column=0)
+    e=Label(infoWindow,width=17,text='First name',borderwidth=2, relief='ridge',anchor='w')
+    e.grid(row=0,column=1)
+    e=Label(infoWindow,width=17,text='Last name',borderwidth=2, relief='ridge',anchor='w')
+    e.grid(row=0,column=2)
+    e=Label(infoWindow,width=17,text='Date of Birth',borderwidth=2, relief='ridge',anchor='w')
+    e.grid(row=0,column=3)
+    e=Label(infoWindow,width=17,text='Address',borderwidth=2, relief='ridge',anchor='w')
+    e.grid(row=0,column=4)
+    e=Label(infoWindow,width=17,text='Phone Number',borderwidth=2, relief='ridge',anchor='w')
+    e.grid(row=0,column=5)
+    e=Label(infoWindow,width=17,text='Email',borderwidth=2, relief='ridge',anchor='w')
+    e.grid(row=0,column=6)
+    e=Label(infoWindow,width=17,text='Blood Type',borderwidth=2, relief='ridge',anchor='w')
+    e.grid(row=0,column=7)
+    for wholename in cursor: 
+        for j in range(len(wholename)):
+            e = Label(infoWindow,width=17, text=wholename[j], borderwidth=2,relief='ridge', anchor="w")  
             e.grid(row=i, column=j) 
-            e.insert(END, infoname[j])
+            #e.insert(END, wholename[j])
         i=i+1
 
-def retrieveNextDonation():
-    name = nextdonentry.get()
+def retrieveNextDonation(fname, lname):
+    wholename = fname + " " + lname
     donationWindow = Toplevel(window) # new window for donation
-    donationWindow.title(name) # title 
-    nextdonlabel = Label( donationWindow,
-    text = q.nextdonation(name, cursor) ) # call nextDonation
+    donationWindow.title(wholename) # title 
+    nextdonlabel = Label( donationWindow, text = q.nextdonation(wholename, cursor) ) # call nextDonation
     donationWindow.geometry('300x100')
     nextdonlabel.grid(column=0, row=0)
 
-def retrieveGiving():
-    name = entergiving.get()
+def retrieveGiving(fname, lname):
+    wholename = fname + " " + lname
     givingWindow = Toplevel(window)
-    givingWindow.title(name)
+    givingWindow.title(wholename)
     lbl = Label( givingWindow,
-    text = q.givingblood(name, cursor) )
+    text = q.givingblood(wholename, cursor) )
     givingWindow.geometry('300x300')
     lbl.grid(column=0, row=0)
 
-def insertToTables():
-    name = combo.get()
-    value = []
-    text = q.insertrow(name, value, cursor)
-    return text.append
 
 
 
 
 
-r = Tk()
-tree = ttk.Treeview(r)
 
 
-firstName=tk.StringVar()
-lastName=tk.StringVar()
-dateOfBirth=tk.StringVar()
-address=tk.StringVar()
-phoneNumber=tk.StringVar()
-email=tk.StringVar()
-bloodType=tk.StringVar()
  
-def add_data(tree):
+def add_data():
     
+    r = Toplevel(window)
+    tree = ttk.Treeview(r)
+    
+    firstName=tk.StringVar()
+    lastName=tk.StringVar()
+    dateOfBirth=tk.StringVar()
+    address=tk.StringVar()
+    phoneNumber=tk.StringVar()
+    email=tk.StringVar()
+    bloodType=tk.StringVar()
     cursor.execute("SELECT * from Donors")
     
     tree['show'] = 'headings'
@@ -113,7 +197,7 @@ def add_data(tree):
     s = ttk.Style(window)
     s.theme_use("clam")
     s.configure(".", font = ('Helvetica', 11))
-    s.configure("Treeview.Heading", foreground='red', font=('Helvetica', 11, "bold"))
+    s.configure("Treeview.Heading", foreground='red')
 
     tree["columns"] = ("donorsId", "firstName", "lastName", "dateOfBirth", "address", "phoneNumber", "email", "bloodType")
 
@@ -128,9 +212,9 @@ def add_data(tree):
     tree.heading("firstName", text="First Name", anchor=tk.CENTER)
     tree.heading("lastName", text="Last Name", anchor=tk.CENTER)
     tree.heading("dateOfBirth", text="Date of birth", anchor=tk.CENTER)
-    tree.heading("address", text="address", anchor=tk.CENTER)
-    tree.heading("phoneNumber", text="phone number", anchor=tk.CENTER)
-    tree.heading("email", text="email", anchor=tk.CENTER)
+    tree.heading("address", text="Address", anchor=tk.CENTER)
+    tree.heading("phoneNumber", text="Phone number", anchor=tk.CENTER)
+    tree.heading("email", text="Email", anchor=tk.CENTER)
     tree.heading("bloodType", text="Blood Type", anchor=tk.CENTER)
 
     i = 0
@@ -151,42 +235,41 @@ def add_data(tree):
     vsb.pack(fill=Y, side = RIGHT)
     r.geometry("1050x700")
     r.title("User detail")
-    f=Frame(r, width=400, height=400, background="black")
-    f.place(x=300, y=270)
-    l1=Label(f, text="First name", width=12, font=('Times', 11, 'bold'))
-    e1=Entry(f, textvariable=firstName, width=15)
-    l1.place(x=50, y=30)
-    e1.place(x=170, y=30)
+    
+    l1=Label(r, text="First name", width=12, font=('Times', 11, 'bold'))
+    e1=Entry(r, textvariable=firstName, width=15)
+    l1.place(x=400, y=300)
+    e1.place(x=520, y=300)
 
-    l2=Label(f, text="Last name", width=12, font=('Times', 11, 'bold'))
-    e2=Entry(f, textvariable=lastName, width=15)
-    l2.place(x=50, y=70)
-    e2.place(x=170, y=70)
+    l2=Label(r, text="Last name", width=12, font=('Times', 11, 'bold'))
+    e2=Entry(r, textvariable=lastName, width=15)
+    l2.place(x=400, y=340)
+    e2.place(x=520, y=340)
 
-    l3=Label(f, text="Date of birth", width=12, font=('Times', 11, 'bold'))
-    e3=Entry(f, textvariable=dateOfBirth, width=15)
-    l3.place(x=50, y=110)
-    e3.place(x=170, y=110)
+    l3=Label(r, text="Date of birth", width=12, font=('Times', 11, 'bold'))
+    e3=Entry(r, textvariable=dateOfBirth, width=15)
+    l3.place(x=400, y=380)
+    e3.place(x=520, y=380)
 
-    l4=Label(f, text="Address", width=12, font=('Times', 11, 'bold'))
-    e4=Entry(f, textvariable=address, width=15)
-    l4.place(x=50, y=150)
-    e4.place(x=170, y=150)
+    l4=Label(r, text="Address", width=12, font=('Times', 11, 'bold'))
+    e4=Entry(r, textvariable=address, width=15)
+    l4.place(x=400, y=420)
+    e4.place(x=520, y=420)
 
-    l5=Label(f, text="Phone number", width=12, font=('Times', 11, 'bold'))
-    e5=Entry(f, textvariable=phoneNumber, width=15)
-    l5.place(x=50, y=190)
-    e5.place(x=170, y=190)
+    l5=Label(r, text="Phone number", width=12, font=('Times', 11, 'bold'))
+    e5=Entry(r, textvariable=phoneNumber, width=15)
+    l5.place(x=400, y=460)
+    e5.place(x=520, y=460)
 
-    l6=Label(f, text="Email", width=12, font=('Times', 11, 'bold'))
-    e6=Entry(f, textvariable=email, width=15)
-    l6.place(x=50, y=230)
-    e6.place(x=170, y=230)
+    l6=Label(r, text="Email", width=12, font=('Times', 11, 'bold'))
+    e6=Entry(r, textvariable=email, width=15)
+    l6.place(x=400, y=500)
+    e6.place(x=520, y=500)
 
-    l7=Label(f, text="Blood type", width=12, font=('Times', 11, 'bold'))
-    e7=Entry(f, textvariable=bloodType, width=15)
-    l7.place(x=50, y=270)
-    e7.place(x=170, y=270)
+    l7=Label(r, text="Blood type", width=12, font=('Times', 11, 'bold'))
+    e7=Entry(r, textvariable=bloodType, width=15)
+    l7.place(x=400, y=540)
+    e7.place(x=520, y=540)
     
     def insert_data():
         nonlocal e1, e2, e3, e4, e5, e6, e7
@@ -209,30 +292,27 @@ def add_data(tree):
         e5.delete(0, END)
         e6.delete(0, END)
         e7.delete(0, END)
-        f.destroy()
+        
 
         
-    deletebutton = tk.Button(f, text="delete", command=lambda: delete_data(tree))
-    deletebutton.place(x=170, y=360)
+    deletebutton = tk.Button(r, text="Delete", command=lambda: delete_data(tree))
+    deletebutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
+    deletebutton.place(x=600, y=580)
 
-    submitbutton = tk.Button(f, text="Submit", command= insert_data)
+    submitbutton = tk.Button(r, text="Submit", command= insert_data)
     submitbutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
-    submitbutton.place(x=100, y=320)
+    submitbutton.place(x=500, y=580)
 
-    cancelbutton = tk.Button(f, text="cancel", command=f.destroy)
+    cancelbutton = tk.Button(r, text="Cancel", command=r.destroy)
     cancelbutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
-    cancelbutton.place(x=240, y=320)
+    cancelbutton.place(x=550, y=620)
 
 
 
 def delete_data(tree):
    selected_item=tree.selection()[0]
-   print(tree.item(selected_item)['values'])
    did=tree.item(selected_item)['values'][0]
-   del_query="DELETE FROM Donors WHERE donorsID=%s"
-   sel_data=(did,)
-   cursor.execute(del_query, sel_data)
-   cnx.commit()
+   q.deleterow("donors", did, cursor)
    tree.delete(selected_item)
    mb.showinfo("Sucess", "donor deleted")
 
@@ -246,59 +326,66 @@ def delete_data(tree):
 
 window = Tk()
 window.title("The Blood bank app") # window title
-window.geometry('400x450') # window size
+window.geometry('450x470') # window size
 
 
 
 
 
 
-tablelabel = Label(window, text="Blood Bank Tables", bg='red') # label for the tables
-tablelabel.place(x=130, y=0) # label pos
+tablelabel = Label(window, text="Blood Bank Tables") # label for the tables
+tablelabel.place(x=155, y=0) # label pos
 # create a combox to choose tables from
 combo = Combobox(window, state = 'readonly') # create combobox
 combo['values']= ("Donors", "Recipients", "Donations", "Transfusions", "AvailableStocks", "Top3") #insert values to combobox
 combo.set("Select Table") # begin with empty box'
-combo.place(x=80, y=25) # pos of combobox
+combo.place(x=105, y=30) # pos of combobox
 # create button, set button text to choose, set command to combo bind open new window and call retrievetables
 tableButton = Button(window, text = "Choose", command = retrieveTables)
-tableButton.place(x=150, y=50) # pos for button
+tableButton.place(x=175, y=60) # pos for button
 
 
 # creating entry to insert firstName to find all information about donors
-infolabel = Label(window, text="Search persons information by first name")
-infolabel.place(x=60, y=85)
-infoentry = Entry(window) # create entry
-infoentry.place(x=90, y=110)
-infoButton = Button(window, text = "Choose", command = infoentry.bind('<<openNewWindow>>', retrieveInfo))
-infoButton.place(x=150, y=135)
+infolabel = Label(window, text="Enter a person's first  and last name to see their information")
+infolabel.place(x=47, y=100)
+firName = Entry(window, width=10) # create entry
+firName.place(x=115, y=130)
+lasName = Entry(window, width=10) # create entry
+lasName.place(x=225, y=130)
+infoButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow>>', retrieveInfo(firName.get(), lasName.get())))
+infoButton.place(x=175, y=160)
 
 
 # create entry to find when donors can donate next
-nextdonlabel = Label(window, text="Can the person donate again by both name")
-nextdonlabel.place(x=55, y=170)
-nextdonentry = Entry(window)
-nextdonentry.place(x=90, y=195)
-nextdonButton = Button(window, text = "Choose", command = nextdonentry.bind('<<openNewWindow>>', retrieveNextDonation))
-nextdonButton.place(x=150, y=220)
+nextdonlabel = Label(window, text="Enter a donor's first  and last name to know when they can donate again")
+nextdonlabel.place(x=2, y=200)
+frstName = Entry(window, width=10) # create entry
+frstName.place(x=115, y=230)
+lstName = Entry(window, width=10) # create entry
+lstName.place(x=225, y=230)
+nextdonButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow>>', retrieveNextDonation(frstName.get(), lstName.get())))
+nextdonButton.place(x=175, y=260)
 
 
 # create entry for gi
-labelgiving = Label(window, text="Enter name of recipient to see who he can get blood from")
-labelgiving.place(x=20, y=255)
-entergiving = Entry(window)
-entergiving.place(x=90, y=280)
-nameButton = Button(window, text = "Choose", command = entergiving.bind('<<openNewWindow>>', retrieveGiving))
-nameButton.place(x=150, y=305)
+labelgiving = Label(window, text="Enter first and last name of recipient to see who they can get blood from")
+labelgiving.place(x=2, y=300)
+fname = Entry(window, width=10)
+fname.place(x=115, y=330)
+lname = Entry(window, width=10)
+lname.place(x=225, y=330)
+nameButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow>>', retrieveGiving(fname.get(), lname.get())))
+nameButton.place(x=175, y=360)
+
 
 
 insert = Combobox(window, state = 'readonly') # create combobox
 insert['values']= ("Donors", "Recipients", "Donations", "Transfusions") #insert values to combobox
 insert.set("Select Table") # begin with empty box'
-insert.place(x=80, y=340) # pos of combobox
+insert.place(x=105, y=400) # pos of combobox
 
-manupbutton = tk.Button(window, text="insert", command=lambda: add_data(tree))
-manupbutton.place(x=150, y=380)
+manupbutton = tk.Button(window, text="insert", command=lambda: add_data())
+manupbutton.place(x=175, y=430)
 
 
 
