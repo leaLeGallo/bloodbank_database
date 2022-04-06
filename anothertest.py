@@ -213,19 +213,13 @@ def add_data(tree):
     cancelbutton.place(x=240, y=320)
 
 
-
 def delete_data(tree):
    selected_item=tree.selection()[0]
    print(tree.item(selected_item)['values'])
    did=tree.item(selected_item)['values'][0]
-   del_query="DELETE FROM Donors WHERE donorsID=%s"
-   sel_data=(did,)
-   cursor.execute(del_query, sel_data)
-   cnx.commit()
+   q.deleterow("donors", did, cursor)
    tree.delete(selected_item)
    mb.showinfo("Sucess", "donor deleted")
-
-    
 
 # THE APP
 
