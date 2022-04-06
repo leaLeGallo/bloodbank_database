@@ -1,21 +1,22 @@
 import mysql.connector
-import tkinter  as tk 
+import tkinter as tk 
 from tkinter import ttk
 from tkinter import *
 from tkinter import messagebox as mb
+import queries as q
 
-r = tk.Tk()
+r = tk.Tk() # root
 r.geometry("600x600")
 r.title("User detail")
 
-connect = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1', database = 'Bloodbank')
+connect = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1', database = "Bloodbank")
 conn = connect.cursor(buffered=True)
 
-conn.execute("SELECT * from Donors")
+conn.execute("SELECT * from Donors") # do we make a method for this?
 tree = ttk.Treeview(r)
 tree['show'] = 'headings'
 
-s = ttk.Style(r)
+s = ttk.Style(r) # style
 s.theme_use("clam")
 s.configure(".", font = ('Helvetica', 11))
 s.configure("Treeview.Heading", foreground='red', font=('Helvetica', 11, "bold"))
@@ -38,16 +39,19 @@ tree.heading("phoneNumber", text="phone number", anchor=tk.CENTER)
 tree.heading("email", text="email", anchor=tk.CENTER)
 tree.heading("bloodType", text="Blood Type", anchor=tk.CENTER)
 
+# populates the life-view table 
 i = 0
 for ro in conn:
    tree.insert('', i, text="", values=(ro[0], ro[1], ro[2], ro[3], ro[4], ro[5], ro[6], ro[7]))
    i = i + 1
 
+# horizontal scrollbar
 hsb = ttk.Scrollbar(r, orient="horizontal")
 hsb.configure(command=tree.xview)
 tree.configure(xscrollcommand=hsb.set)
 hsb.pack(fill=X, side = BOTTOM)
 
+# vertical scrollbar
 vsb = ttk.Scrollbar(r, orient="vertical")
 vsb.configure(command=tree.yview)
 tree.configure(yscrollcommand=vsb.set)
@@ -62,7 +66,9 @@ phoneNumber=tk.StringVar()
 email=tk.StringVar()
 bloodType=tk.StringVar()
 
+
 def add_data(tree):
+   # Window design
    f=Frame(r, width=400, height=320, background="black")
    f.place(x=100, y=250)
    l1=Label(f, text="firstName", width=8, font=('Times', 11, 'bold'))
@@ -101,7 +107,7 @@ def add_data(tree):
    e7.place(x=170, y=270)
    
    def insert_data():
-      nonlocal e1, e2, e3, e4, e5, e6, e7
+      nonlocal e1, e2, e3, e4, e5, e6, e7 # all entries
       s_firstName = firstName.get()
       s_lastName = lastName.get()
       dob = dateOfBirth.get()
@@ -109,11 +115,16 @@ def add_data(tree):
       phone = phoneNumber.get()
       e = email.get()
       bt = bloodType.get()
-      conn.execute('INSERT INTO Donors(firstName, lastName, dateOfBirth, address, phoneNumber, email, bloodType) VALUES(%s,%s,%s,%s,%s,%s,%s)', (s_firstName, s_lastName, dob, add, phone, e, bt))
+      # adds the data to a list
+      datalist = [s_firstName, s_lastName, dob, add, phone, e, bt]
+      # inserts data into MySQL database
+      q.insertrow("Donors", datalist, conn)
       print(conn.lastrowid)
       connect.commit()
+      # life-view of data inserting
       tree.insert('', 'end', text="", values=(conn.lastrowid, s_firstName, s_lastName, dob, add, phone, e, bt))
       mb.showinfo("Sucess", "donor registered")
+      # empties entry fields and close the window
       e1.delete(0, END)
       e2.delete(0, END)
       e3.delete(0, END)
@@ -123,9 +134,7 @@ def add_data(tree):
       e7.delete(0, END)
       f.destroy()
       
-      
-   
-   submitbutton = tk.Button(f, text="Submit", command= insert_data)
+   submitbutton = tk.Button(f, text="Submit", command= insert_data())
    submitbutton.configure(font=('Times', 11, 'bold'), bg='green', fg='white')
    submitbutton.place(x=100, y=300)
    
@@ -137,12 +146,9 @@ def delete_data(tree):
    selected_item=tree.selection()[0]
    print(tree.item(selected_item)['values'])
    did=tree.item(selected_item)['values'][0]
-   del_query="DELETE FROM Donors WHERE donorsID=%s"
-   sel_data=(did,)
-   conn.execute(del_query, sel_data)
-   connect.commit()
+   q.deleterow("donors", did, conn)
    tree.delete(selected_item)
-   mb.showinfo("Sucess", "donor deleted")
+   mb.showinfo("Success", "donor deleted")
 
 insertbutton = tk.Button(r, text="insert", command=lambda: add_data(tree))
 insertbutton.configure(font = ('calabri', 14, 'bold'), bg = 'grey', fg = 'black')
@@ -151,6 +157,5 @@ insertbutton.place(x=200, y=260)
 deletebutton = tk.Button(r, text="delete", command=lambda: delete_data(tree))
 deletebutton.configure(font = ('calabri', 14, 'bold'), bg = 'grey', fg = 'black')
 deletebutton.place(x=300, y=260)
-
 
 r.mainloop()

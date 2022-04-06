@@ -6,10 +6,13 @@ from tkinter import ttk
 from tkinter import *
 from tkinter import messagebox as mb
 
-cnx = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1')
-cursor = cnx.cursor(buffered=True)
 
-# CREATING THE DATABASE AND POPULATING IT
+
+cnx = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1', database = "Bloodbank")
+cursor = cnx.cursor(buffered=True)
+ 
+# CREATING THE DATABASE 
+
 try:
     cursor.execute("USE {}".format(DATABASE_NAME)) # function to use database
 except mysql.connector.Error as err:
@@ -36,9 +39,11 @@ else:
 
 
 # METHODS FOR THE APP
+
+# Shows all the tables and views
 def retrieveTables():
-    table = combo.get()
-    newWindow = Tk()
+    table = combo.get() # table selected with drop down list
+    newWindow = Toplevel(window)
     cursor.execute(q.show_table(table, cursor))
     headers = [e[0] for e in cursor.description]
     i = 1
@@ -49,37 +54,41 @@ def retrieveTables():
             e.insert(END, table[j])
         i=i+1
 
-def retrieveInfo(fname, lname):
-    wholename = fname + " " + lname
+
+def retrieveInfo(fname, lname, table):
+    fullname = fname + " " + lname
     infoWindow = Toplevel(window) # creat new window for info
-    cursor.execute(q.findDonor(wholename, cursor))
+    cursor.execute(q.findDonor(fullname, table, cursor))
     i = 1
-    for wholename in cursor: 
-        for j in range(len(wholename)):
+    for infoname in cursor: 
+        for j in range(len(infoname)):
             e = Entry(infoWindow, width=10) 
             e.grid(row=i, column=j) 
-            e.insert(END, wholename[j])
+            e.insert(END, infoname[j])
         i=i+1
 
 def retrieveNextDonation(fname, lname):
-    wholename = fname + " " + lname
+    fullname = fname + " " + lname
     donationWindow = Toplevel(window) # new window for donation
-    donationWindow.title(wholename) # title 
-    nextdonlabel = Label( donationWindow, text = q.nextdonation(wholename, cursor) ) # call nextDonation
+    donationWindow.title(fullname) # title 
+    nextdonlabel = Label( donationWindow,
+    text = q.nextdonation(fullname, cursor) ) # call nextDonation
     donationWindow.geometry('300x100')
     nextdonlabel.grid(column=0, row=0)
 
 def retrieveGiving(fname, lname):
-    wholename = fname + " " + lname
+    fullname = fname + " " + lname
     givingWindow = Toplevel(window)
-    givingWindow.title(wholename)
+    givingWindow.title(fullname)
     lbl = Label( givingWindow,
-    text = q.givingblood(wholename, cursor) )
+    text = q.givingblood(fullname, cursor) )
     givingWindow.geometry('300x300')
     lbl.grid(column=0, row=0)
 
+
 r = Tk()
 tree = ttk.Treeview(r)
+
 
 firstName=tk.StringVar()
 lastName=tk.StringVar()
@@ -90,7 +99,8 @@ email=tk.StringVar()
 bloodType=tk.StringVar()
  
 def add_data(tree):
-    
+    r = Tk()
+    tree = ttk.Treeview(r)
     cursor.execute("SELECT * from Donors")
     
     tree['show'] = 'headings'
@@ -174,7 +184,7 @@ def add_data(tree):
     e7.place(x=170, y=270)
     
     def insert_data():
-        nonlocal e1, e2, e3, e4, e5, e6, e7
+        nonlocal e1, e2, e3, e4, e5, e6, e7 # all entries
         s_firstName = firstName.get()
         s_lastName = lastName.get()
         dob = dateOfBirth.get()
@@ -185,11 +195,11 @@ def add_data(tree):
         # adds the data to a list
         datalist = [s_firstName, s_lastName, dob, add, phone, e, bt]
         # inserts data into MySQL database
-        q.insertrow("Donors", datalist, cursor)
-        print(cursor.lastrowid)
-        cnx.commit()
+        q.insertrow("Donors", datalist, cnx)
+        print(cnx.lastrowid)
+        cursor.commit()
         # life-view of data inserting
-        tree.insert('', 'end', text="", values=(31, s_firstName, s_lastName, dob, add, phone, e, bt))
+        tree.insert('', 'end', text="", values=(cursor.lastrowid, s_firstName, s_lastName, dob, add, phone, e, bt))
         mb.showinfo("Sucess", "donor registered")
         e1.delete(0, END)
         e2.delete(0, END)
@@ -208,6 +218,7 @@ def add_data(tree):
     submitbutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
     submitbutton.place(x=100, y=320)
 
+    # CANCEL BUTTON
     cancelbutton = tk.Button(f, text="cancel", command=f.destroy)
     cancelbutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
     cancelbutton.place(x=240, y=320)
@@ -217,14 +228,17 @@ def delete_data(tree):
    selected_item=tree.selection()[0]
    print(tree.item(selected_item)['values'])
    did=tree.item(selected_item)['values'][0]
-   q.deleterow("donors", did, cursor)
+   q.deleterow("donors", did, cnx)
    tree.delete(selected_item)
    mb.showinfo("Sucess", "donor deleted")
+
+    
+
+
 
 # THE APP
 
 # Create the main window
-
 
 window = Tk()
 window.title("The Blood bank app") # window title
@@ -232,47 +246,48 @@ window.geometry('400x450') # window size
 
 
 tablelabel = Label(window, text="Blood Bank Tables") # label for the tables
-tablelabel.place(x=130, y=0) # label pos
+tablelabel.place(x=130, y=0) # label position
+
 # create a combox to choose tables from
-combo = Combobox(window, state = 'readonly') # create combobox
+combo = Combobox(window, state = 'readonly') 
 combo['values']= ("Donors", "Recipients", "Donations", "Transfusions", "AvailableStocks", "Top3") #insert values to combobox
-combo.set("Select Table") # begin with empty box'
-combo.place(x=80, y=25) # pos of combobox
+combo.set("Select Table") # empty box
+combo.place(x=80, y=25) # position of combobox
 # create button, set button text to choose, set command to combo bind open new window and call retrievetables
 tableButton = Button(window, text = "Choose", command = retrieveTables)
 tableButton.place(x=150, y=50) # pos for button
 
 
 # creating entry to insert firstName to find all information about donors
-infolabel = Label(window, text="Enter a person's first  and last name to see their information")
+infolabel = Label(window, text="Search person's information (first and last name)")
 infolabel.place(x=60, y=85)
-firName = Entry(window) # create entry
-firName.place(x=90, y=110)
-lasName = Entry(window) # create entry
-lasName.place(x=200, y=110)
-infoButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow>>', retrieveInfo(firName.get(), lasName.get())))
+firstName = Entry(window) # create entry
+firstName.place(x=90, y=110)
+lastName = Entry(window) # create entry
+lastName.place(x=200, y=110)
+infoButton = Button(window, text = "Choose", command = lambda:('<<openNewWindow>>', retrieveInfo(firstName.get(), lastName.get(), "donors")))
 infoButton.place(x=150, y=135)
 
 
 # create entry to find when donors can donate next
-nextdonlabel = Label(window, text="Enter a donor's first  and last name to know when they can donate again")
+nextdonlabel = Label(window, text="Check when a donor can donate again (first and last name)")
 nextdonlabel.place(x=55, y=170)
-frstName = Entry(window) # create entry
-frstName.place(x=90, y=195)
-lstName = Entry(window) # create entry
-lstName.place(x=200, y=195)
-nextdonButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow>>', retrieveNextDonation(frstName.get(), lstName.get())))
+firstName = Entry(window)
+firstName.place(x=90, y=195)
+lastName = Entry(window)
+lastName.place(x=200, y=195)
+nextdonButton = Button(window, text = "Choose", command = lambda:('<<openNewWindow>>', retrieveNextDonation(firstName.get(), lastName.get())))
 nextdonButton.place(x=150, y=220)
 
 
 # create entry for gi
-labelgiving = Label(window, text="Enter first and last name of recipient to see who they can get blood from")
+labelgiving = Label(window, text="Enter name of recipient to see who they can get blood from")
 labelgiving.place(x=20, y=255)
-fname = Entry(window)
-fname.place(x=90, y=280)
-lname = Entry(window)
-lname.place(x=200, y=280)
-nameButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow>>', retrieveGiving(fname.get(), lname.get())))
+firstName = Entry(window)
+firstName.place(x=90, y=280)
+lastName = Entry(window)
+lastName.place(x=200, y=280)
+nameButton = Button(window, text = "Choose", command = lambda:('<<openNewWindow>>', retrieveGiving(firstName.get(), lastName.get())))
 nameButton.place(x=150, y=305)
 
 
@@ -282,7 +297,15 @@ insert.set("Select Table") # begin with empty box'
 insert.place(x=80, y=340) # pos of combobox
 
 manupbutton = tk.Button(window, text="insert", command=lambda: add_data(tree))
-manupbutton.place(x=150, y=380)
+manupbutton.place(x=100, y=380)
+
+insertbutton = tk.Button(r, text="insert", command=lambda: add_data(tree))
+insertbutton.place(x=100, y=380)
+
+deletebutton = tk.Button(r, text="delete", command=lambda: delete_data(tree))
+deletebutton.place(x=200, y=380)
+
+
 
 
 
