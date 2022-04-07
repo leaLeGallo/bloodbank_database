@@ -1,4 +1,5 @@
 from cProfile import label
+from tkinter.tix import ROW
 from bloodBank import *
 import queries as q
 from tkinter.ttk import *
@@ -100,6 +101,7 @@ def add_data():
     r = Toplevel(window)
     tree = ttk.Treeview(r)
 
+    '''
     firstName=tk.StringVar()
     lastName=tk.StringVar()
     dateOfBirth=tk.StringVar()
@@ -107,7 +109,7 @@ def add_data():
     phoneNumber=tk.StringVar()
     email=tk.StringVar()
     bloodType=tk.StringVar()
-
+    '''
     q.show_table(table, cursor)
     headers = [i[0] for i in cursor.description]
 
@@ -150,7 +152,7 @@ def add_data():
     '''
 
     for row in cursor:
-        tree.insert('', "end", text="", values=(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]))
+        tree.insert('', "end", text="", values = row)
     
     tree.pack(ipadx='250', ipady='29')
 
@@ -169,6 +171,24 @@ def add_data():
     r.title("User detail")
     
     #Create all entries
+    
+    headers.pop(0)
+
+    entries = []
+
+    yas = 300
+    for header in headers:
+        entry=Entry(r, width=15)
+        entry.place(x=520, y = yas )
+        print(yas)
+        label =Label(r, text=header, width=12, font=('Times', 11, 'bold'))
+        label.place(x=400, y = yas)
+        yas += 40
+        entries.append(entry)
+
+
+    '''
+    
     l1=Label(r, text="First name", width=12, font=('Times', 11, 'bold'))
     e1=Entry(r, textvariable=firstName, width=15)
     l1.place(x=400, y=300)
@@ -203,9 +223,9 @@ def add_data():
     e7=Entry(r, textvariable=bloodType, width=15)
     l7.place(x=400, y=540)
     e7.place(x=520, y=540)
-    
+  
+    '''
     def insert_data():
-        nonlocal e1, e2, e3, e4, e5, e6, e7
         '''
         s_firstName = firstName.get()
         s_lastName = lastName.get()
@@ -236,7 +256,6 @@ def add_data():
         for widget in r.winfo_children():
             if isinstance(widget, Entry):
                 widget.delete(0, "end")
-                print(widget)
         '''        
         e1.delete(0, END)
         e2.delete(0, END)
