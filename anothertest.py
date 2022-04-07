@@ -9,7 +9,7 @@ from tkinter import messagebox as mb
 
 
 
-cnx= mysql.connector.connect(user='root', password='root', host='127.0.0.1:8889', unix_socket= '/Applications/MAMP/tmp/mysql/mysql.sock')
+cnx = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1', database = "Bloodbank")
 cursor = cnx.cursor(buffered=True)
  
 
@@ -43,112 +43,36 @@ else:
 def retrieveTables():
     table = combo.get()
     newWindow = tk.Tk()
-    cursor.execute(q.show_table(table, cursor))
-    if (table == 'Donors'):
-        e=Label(newWindow,width=17,text='Donors id',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=0)
-        e=Label(newWindow,width=17,text='First name',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=1)
-        e=Label(newWindow,width=17,text='Last name',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=2)
-        e=Label(newWindow,width=17,text='Date of Birth',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=3)
-        e=Label(newWindow,width=17,text='Address',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=4)
-        e=Label(newWindow,width=17,text='Phone Number',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=5)
-        e=Label(newWindow,width=17,text='Email',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=6)
-        e=Label(newWindow,width=17,text='Blood Type',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=7)
-    elif (table == 'Recipients'):
-        e=Label(newWindow,width=17,text='Recipients id',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=0)
-        e=Label(newWindow,width=17,text='First name',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=1)
-        e=Label(newWindow,width=17,text='Last name',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=2)
-        e=Label(newWindow,width=17,text='Date of Birth',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=3)
-        e=Label(newWindow,width=17,text='Address',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=4)
-        e=Label(newWindow,width=17,text='Phone Number',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=5)
-        e=Label(newWindow,width=17,text='Email',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=6)
-        e=Label(newWindow,width=17,text='Blood Type',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=7)
-    elif (table == 'Donations'):
-        e=Label(newWindow,width=17,text='Number',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=0)
-        e=Label(newWindow,width=17,text='Donors id',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=1)
-        e=Label(newWindow,width=17,text='Date',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=2)
-        e=Label(newWindow,width=17,text='Quantity',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=3)
-        e=Label(newWindow,width=17,text='Expired',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=4)
-    elif (table == 'Transfusions'):
-        e=Label(newWindow,width=17,text='Number',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=0)
-        e=Label(newWindow,width=17,text='Date',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=1)
-        e=Label(newWindow,width=17,text='Recipient id',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=2)
-        e=Label(newWindow,width=17,text='Quantity',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=3)
-        e=Label(newWindow,width=17,text='Blood Type',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=4)
-        e=Label(newWindow,width=17,text='Donation Id',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=5)
-    elif (table == 'AvailableStocks'):
-        e=Label(newWindow,width=17,text='Blood Type',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=0)
-        e=Label(newWindow,width=17,text='Stock',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=1)
-    elif (table == 'Top3'):
-        e=Label(newWindow,width=17,text='Name',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=0)
-        e=Label(newWindow,width=17,text='People Saved',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=1)
-    
-    
+    q.show_table(table, cursor)
+    headers = [i[0] for i in cursor.description]
+    i = 0
+    for header in headers:
+        print(header)
+        e = Label(newWindow,width=17,text=header,borderwidth=2, relief='ridge',anchor='w')
+        e.grid(row=0,column=i)
+        i+=1
     i = 1
-    
-    
-    for thing in cursor: 
-        for j in range(len(thing)):
-            e = Label(newWindow,width=17, text=thing[j], borderwidth=2,relief='ridge', anchor="w")  
+    for row in cursor:
+        for j in range(len(row)):
+            e = Label(newWindow,width=17, text=row[j], borderwidth=2,relief='ridge', anchor="w")  
             e.grid(row=i, column=j) 
-            #e.insert(END, person[j])
-            
-        i=i+1
+        i+=1
 
 def retrieveInfo(fname, lname):
     wholename = fname + " " + lname
     infoWindow = Toplevel(window) # creat new window for info
     cursor.execute(q.findDonor(wholename, cursor))
+    headers = [i[0] for i in cursor.description]
+    i = 0
+    for header in headers:
+        print(header)
+        e = Label(infoWindow,width=17, text=header, borderwidth=2,relief='ridge', anchor="w")
+        e.grid(row=0, column=i)
+        i+=1
     i = 1
-    e=Label(infoWindow,width=17,text='Donors id',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=0)
-    e=Label(infoWindow,width=17,text='First name',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=1)
-    e=Label(infoWindow,width=17,text='Last name',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=2)
-    e=Label(infoWindow,width=17,text='Date of Birth',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=3)
-    e=Label(infoWindow,width=17,text='Address',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=4)
-    e=Label(infoWindow,width=17,text='Phone Number',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=5)
-    e=Label(infoWindow,width=17,text='Email',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=6)
-    e=Label(infoWindow,width=17,text='Blood Type',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=7)
     for wholename in cursor: 
         for j in range(len(wholename)):
-            e = Label(infoWindow,width=17, text=wholename[j], borderwidth=2,relief='ridge', anchor="w")  
+            e = Label(infoWindow,width=17, text=wholename[j], borderwidth=2,relief='ridge', anchor="w")
             e.grid(row=i, column=j) 
             #e.insert(END, wholename[j])
         i=i+1
@@ -170,19 +94,12 @@ def retrieveGiving(fname, lname):
     givingWindow.geometry('300x300')
     lbl.grid(column=0, row=0)
 
-
-
-
-
-
-
-
- 
 def add_data():
-    
+    table = insert.get() # selected table
+
     r = Toplevel(window)
     tree = ttk.Treeview(r)
-    
+
     firstName=tk.StringVar()
     lastName=tk.StringVar()
     dateOfBirth=tk.StringVar()
@@ -190,17 +107,22 @@ def add_data():
     phoneNumber=tk.StringVar()
     email=tk.StringVar()
     bloodType=tk.StringVar()
-    cursor.execute("SELECT * from Donors")
-    
+
+    q.show_table(table, cursor)
+
+
     tree['show'] = 'headings'
 
+    # style
     s = ttk.Style(window)
     s.theme_use("clam")
     s.configure(".", font = ('Helvetica', 11))
     s.configure("Treeview.Heading", foreground='red')
 
+    #Define columns
     tree["columns"] = ("donorsId", "firstName", "lastName", "dateOfBirth", "address", "phoneNumber", "email", "bloodType")
 
+    #Format columns
     tree.column("firstName", width=50, minwidth=150, anchor=tk.CENTER)
     tree.column("lastName", width=50, minwidth=150, anchor=tk.CENTER)
     tree.column("dateOfBirth", width=50, minwidth=150, anchor=tk.CENTER)
@@ -209,6 +131,7 @@ def add_data():
     tree.column("email", width=50, minwidth=150, anchor=tk.CENTER)
     tree.column("bloodType", width=50, minwidth=150, anchor=tk.CENTER)
 
+    #Create headings
     tree.heading("firstName", text="First Name", anchor=tk.CENTER)
     tree.heading("lastName", text="Last Name", anchor=tk.CENTER)
     tree.heading("dateOfBirth", text="Date of birth", anchor=tk.CENTER)
@@ -217,18 +140,19 @@ def add_data():
     tree.heading("email", text="Email", anchor=tk.CENTER)
     tree.heading("bloodType", text="Blood Type", anchor=tk.CENTER)
 
-    i = 0
-    for ro in cursor:
-        tree.insert('', i, text="", values=(ro[0], ro[1], ro[2], ro[3], ro[4], ro[5], ro[6], ro[7]))
-        i = i + 1
+
+    for row in cursor:
+        tree.insert('', "end", text="", values=(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]))
     
     tree.pack(ipadx='250', ipady='29')
 
+    #Horizontal scrollbar 
     hsb = ttk.Scrollbar(r, orient="horizontal")
     hsb.configure(command=tree.xview)
     tree.configure(xscrollcommand=hsb.set)
     hsb.pack(fill=X, side = BOTTOM)
 
+    #Vertical scrollbar
     vsb = ttk.Scrollbar(r, orient="vertical")
     vsb.configure(command=tree.yview)
     tree.configure(yscrollcommand=vsb.set)
@@ -236,6 +160,7 @@ def add_data():
     r.geometry("1050x700")
     r.title("User detail")
     
+    #Create all entries
     l1=Label(r, text="First name", width=12, font=('Times', 11, 'bold'))
     e1=Entry(r, textvariable=firstName, width=15)
     l1.place(x=400, y=300)
@@ -273,6 +198,7 @@ def add_data():
     
     def insert_data():
         nonlocal e1, e2, e3, e4, e5, e6, e7
+        '''
         s_firstName = firstName.get()
         s_lastName = lastName.get()
         dob = dateOfBirth.get()
@@ -280,15 +206,30 @@ def add_data():
         phone = phoneNumber.get()
         e = email.get()
         bt = bloodType.get()
+        '''
+
+        entries = get_all_entry_widgets_text_content(r)
+
+        '''
         # adds the data to a list
         datalist = [s_firstName, s_lastName, dob, add, phone, e, bt]
+        '''
+        datalist = [entry.get() for entry in entries]
         # inserts data into MySQL database
         q.insertrow("Donors", datalist, cursor)
-        print(cursor.lastrowid)
         cnx.commit()
         # life-view of data inserting
-        tree.insert('', 'end', text="", values=(31, s_firstName, s_lastName, dob, add, phone, e, bt))
+        #tree.insert('', 'end', text="", values=(cursor.lastrowid, s_firstName, s_lastName, dob, add, phone, e, bt))
+        tree.insert('', 'end', text="", values=(datalist))
+        #Success message
         mb.showinfo("Sucess", "donor registered")
+
+        #Empty all entry widgets
+        for widget in r.winfo_children():
+            if isinstance(widget, Entry):
+                widget.delete(0, "end")
+                print(widget)
+        '''        
         e1.delete(0, END)
         e2.delete(0, END)
         e3.delete(0, END)
@@ -296,9 +237,9 @@ def add_data():
         e5.delete(0, END)
         e6.delete(0, END)
         e7.delete(0, END)
-        
+        '''
 
-        
+
     deletebutton = tk.Button(r, text="Delete", command=lambda: delete_data(tree))
     deletebutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
     deletebutton.place(x=600, y=580)
@@ -312,6 +253,11 @@ def add_data():
     cancelbutton.place(x=550, y=620)
 
 
+def get_all_entry_widgets_text_content(root):
+    all_entries = [widget for widget in root.winfo_children() if isinstance(widget, Entry)]
+    return all_entries
+
+
 
 def delete_data(tree):
    selected_item=tree.selection()[0]
@@ -323,7 +269,6 @@ def delete_data(tree):
     
 
 
-
 # THE APP
 
 # Create the main window
@@ -331,10 +276,6 @@ def delete_data(tree):
 window = Tk()
 window.title("The Blood bank app") # window title
 window.geometry('450x470') # window size
-
-
-
-
 
 
 tablelabel = Label(window, text="Blood Bank Tables") # label for the tables
@@ -390,13 +331,6 @@ insert.place(x=105, y=400) # pos of combobox
 
 manupbutton = tk.Button(window, text="insert", command=lambda: add_data())
 manupbutton.place(x=175, y=430)
-
-
-
-
-
-
-
 
 
 window.mainloop()
