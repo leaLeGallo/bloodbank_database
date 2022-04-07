@@ -79,7 +79,11 @@ def givingblood(wholename, cursor):
         res += f"• {don[0]} \n"
     return res
 
-def findDonor(wholename, table, cursor):
-    query = f"Select * from {table} where concat (firstName, ' ' , lastName) = '{wholename}'"
+def findDonor(wholename, cursor):
+    # check in the donors table
+    query = f"Select * from Donors where concat (firstName, ' ' , lastName) = '{wholename}'"
     cursor.execute(query)
+    # check in the recipients table
+    if (cursor.fetchone() == None):
+        query = f"Select * from Recipients where concat (firstName, ' ' , lastName) = '{wholename}'"
     return query

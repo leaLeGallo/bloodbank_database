@@ -48,7 +48,6 @@ def retrieveTables():
     headers = [i[0] for i in cursor.description]
     i = 0
     for header in headers:
-        print(header)
         e = Label(newWindow,width=17,text=header,borderwidth=2, relief='ridge',anchor='w')
         e.grid(row=0,column=i)
         i+=1
@@ -66,7 +65,6 @@ def retrieveInfo(fname, lname):
     headers = [i[0] for i in cursor.description]
     i = 0
     for header in headers:
-        print(header)
         e = Label(infoWindow,width=17, text=header, borderwidth=2,relief='ridge', anchor="w")
         e.grid(row=0, column=i)
         i+=1
@@ -101,15 +99,7 @@ def add_data():
     r = Toplevel(window)
     tree = ttk.Treeview(r)
 
-    '''
-    firstName=tk.StringVar()
-    lastName=tk.StringVar()
-    dateOfBirth=tk.StringVar()
-    address=tk.StringVar()
-    phoneNumber=tk.StringVar()
-    email=tk.StringVar()
-    bloodType=tk.StringVar()
-    '''
+
     q.show_table(table, cursor)
     headers = [i[0] for i in cursor.description]
 
@@ -128,29 +118,12 @@ def add_data():
     #Format columns
     for header in headers:
         tree.column(header, width=50, minwidth=150, anchor=tk.CENTER)
-    ''' 
-    tree.column("firstName", width=50, minwidth=150, anchor=tk.CENTER)
-    tree.column("lastName", width=50, minwidth=150, anchor=tk.CENTER)
-    tree.column("dateOfBirth", width=50, minwidth=150, anchor=tk.CENTER)
-    tree.column("address", width=50, minwidth=150, anchor=tk.CENTER)
-    tree.column("phoneNumber", width=50, minwidth=150, anchor=tk.CENTER)
-    tree.column("email", width=50, minwidth=150, anchor=tk.CENTER)
-    tree.column("bloodType", width=50, minwidth=150, anchor=tk.CENTER)
-    '''
+
     #Create headings
     for header in headers:
         tree.heading(header, text=header, anchor=tk.CENTER)
 
-    '''
-    tree.heading("firstName", text="First Name", anchor=tk.CENTER)
-    tree.heading("lastName", text="Last Name", anchor=tk.CENTER)
-    tree.heading("dateOfBirth", text="Date of birth", anchor=tk.CENTER)
-    tree.heading("address", text="Address", anchor=tk.CENTER)
-    tree.heading("phoneNumber", text="Phone number", anchor=tk.CENTER)
-    tree.heading("email", text="Email", anchor=tk.CENTER)
-    tree.heading("bloodType", text="Blood Type", anchor=tk.CENTER)
-    '''
-
+    #Insert rows
     for row in cursor:
         tree.insert('', "end", text="", values = row)
     
@@ -172,14 +145,12 @@ def add_data():
     
     #Create all entries
     
-    headers.pop(0)
-
+    headers.pop(0) # removing the index
 
     yas = 300
     for header in headers:
         entry=Entry(r, width=15)
         entry.place(x=520, y = yas )
-        print(yas)
         label =Label(r, text=header, width=12, font=('Times', 11, 'bold'))
         label.place(x=400, y = yas)
         yas += 40
