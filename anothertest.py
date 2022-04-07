@@ -109,9 +109,10 @@ def add_data():
     bloodType=tk.StringVar()
 
     q.show_table(table, cursor)
+    headers = [i[0] for i in cursor.description]
 
 
-    tree['show'] = 'headings'
+    tree['show'] = 'headings' #ask gummi about that
 
     # style
     s = ttk.Style(window)
@@ -120,9 +121,12 @@ def add_data():
     s.configure("Treeview.Heading", foreground='red')
 
     #Define columns
-    tree["columns"] = ("donorsId", "firstName", "lastName", "dateOfBirth", "address", "phoneNumber", "email", "bloodType")
+    tree["columns"] = (headers)
 
     #Format columns
+    for header in headers:
+        tree.column(header, width=50, minwidth=150, anchor=tk.CENTER)
+    ''' 
     tree.column("firstName", width=50, minwidth=150, anchor=tk.CENTER)
     tree.column("lastName", width=50, minwidth=150, anchor=tk.CENTER)
     tree.column("dateOfBirth", width=50, minwidth=150, anchor=tk.CENTER)
@@ -130,8 +134,12 @@ def add_data():
     tree.column("phoneNumber", width=50, minwidth=150, anchor=tk.CENTER)
     tree.column("email", width=50, minwidth=150, anchor=tk.CENTER)
     tree.column("bloodType", width=50, minwidth=150, anchor=tk.CENTER)
-
+    '''
     #Create headings
+    for header in headers:
+        tree.heading(header, text=header, anchor=tk.CENTER)
+
+    '''
     tree.heading("firstName", text="First Name", anchor=tk.CENTER)
     tree.heading("lastName", text="Last Name", anchor=tk.CENTER)
     tree.heading("dateOfBirth", text="Date of birth", anchor=tk.CENTER)
@@ -139,7 +147,7 @@ def add_data():
     tree.heading("phoneNumber", text="Phone number", anchor=tk.CENTER)
     tree.heading("email", text="Email", anchor=tk.CENTER)
     tree.heading("bloodType", text="Blood Type", anchor=tk.CENTER)
-
+    '''
 
     for row in cursor:
         tree.insert('', "end", text="", values=(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]))
@@ -218,12 +226,12 @@ def add_data():
         # inserts data into MySQL database
         q.insertrow("Donors", datalist, cursor)
         cnx.commit()
+        datalist.insert(0, cursor.lastrowid)
         # life-view of data inserting
         #tree.insert('', 'end', text="", values=(cursor.lastrowid, s_firstName, s_lastName, dob, add, phone, e, bt))
         tree.insert('', 'end', text="", values=(datalist))
         #Success message
-        mb.showinfo("Sucess", "donor registered")
-
+        mb.showinfo("Sucess", f"{table[:-1]} registered")
         #Empty all entry widgets
         for widget in r.winfo_children():
             if isinstance(widget, Entry):
@@ -258,13 +266,13 @@ def get_all_entry_widgets_text_content(root):
     return all_entries
 
 
-
 def delete_data(tree):
+   table = insert.get()
    selected_item=tree.selection()[0]
    did=tree.item(selected_item)['values'][0]
-   q.deleterow("donors", did, cursor)
+   q.deleterow(table, did, cursor)
    tree.delete(selected_item)
-   mb.showinfo("Sucess", "donor deleted")
+   mb.showinfo("Sucess", f"{table[:-1]}, deleted")
 
     
 
