@@ -1,4 +1,4 @@
-from cProfile import label
+
 from bloodBank import *
 import queries as q
 from tkinter.ttk import *
@@ -43,109 +43,34 @@ else:
 def retrieveTables():
     table = combo.get()
     newWindow = tk.Tk()
-    cursor.execute(q.show_table(table, cursor))
-    if (table == 'Donors'):
-        e=Label(newWindow,width=17,text='Donors id',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=0)
-        e=Label(newWindow,width=17,text='First name',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=1)
-        e=Label(newWindow,width=17,text='Last name',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=2)
-        e=Label(newWindow,width=17,text='Date of Birth',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=3)
-        e=Label(newWindow,width=17,text='Address',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=4)
-        e=Label(newWindow,width=17,text='Phone Number',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=5)
-        e=Label(newWindow,width=17,text='Email',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=6)
-        e=Label(newWindow,width=17,text='Blood Type',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=7)
-    elif (table == 'Recipients'):
-        e=Label(newWindow,width=17,text='Recipients id',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=0)
-        e=Label(newWindow,width=17,text='First name',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=1)
-        e=Label(newWindow,width=17,text='Last name',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=2)
-        e=Label(newWindow,width=17,text='Date of Birth',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=3)
-        e=Label(newWindow,width=17,text='Address',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=4)
-        e=Label(newWindow,width=17,text='Phone Number',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=5)
-        e=Label(newWindow,width=17,text='Email',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=6)
-        e=Label(newWindow,width=17,text='Blood Type',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=7)
-    elif (table == 'Donations'):
-        e=Label(newWindow,width=17,text='Number',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=0)
-        e=Label(newWindow,width=17,text='Donors id',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=1)
-        e=Label(newWindow,width=17,text='Date',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=2)
-        e=Label(newWindow,width=17,text='Quantity',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=3)
-        e=Label(newWindow,width=17,text='Expired',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=4)
-    elif (table == 'Transfusions'):
-        e=Label(newWindow,width=17,text='Number',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=0)
-        e=Label(newWindow,width=17,text='Date',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=1)
-        e=Label(newWindow,width=17,text='Recipient id',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=2)
-        e=Label(newWindow,width=17,text='Quantity',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=3)
-        e=Label(newWindow,width=17,text='Blood Type',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=4)
-        e=Label(newWindow,width=17,text='Donation Id',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=5)
-    elif (table == 'AvailableStocks'):
-        e=Label(newWindow,width=17,text='Blood Type',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=0)
-        e=Label(newWindow,width=17,text='Stock',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=1)
-    elif (table == 'Top3'):
-        e=Label(newWindow,width=17,text='Name',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=0)
-        e=Label(newWindow,width=17,text='People Saved',borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=1)
-    
-    
+    newWindow.title(f"{table}")
+    q.show_table(table, cursor)
+    headers = [i[0] for i in cursor.description]
+    i = 0
+    for header in headers:
+        print(header)
+        e = Label(newWindow,width=17, text=header, borderwidth=2,relief='ridge', anchor="w")
+        e.grid(row=0, column=i)
+        i+=1
     i = 1
-    
-    
-    for thing in cursor: 
-        for j in range(len(thing)):
-            e = Label(newWindow,width=17, text=thing[j], borderwidth=2,relief='ridge', anchor="w")  
-            e.grid(row=i, column=j) 
-            #e.insert(END, person[j])
-            
-        i=i+1
+    for row in cursor: 
+        for j in range(len(row)):
+            e = Label(newWindow,width=17, text=row[j], borderwidth=2,relief='ridge', anchor="w")  
+            e.grid(row=i, column=j)   
+        i+=1
 
 def retrieveInfo(fname, lname):
     wholename = fname + " " + lname
     infoWindow = Toplevel(window) # creat new window for info
     cursor.execute(q.findDonor(wholename, cursor))
+    headers = [i[0] for i in cursor.description]
+    i = 0
+    for header in headers:
+        print(header)
+        e = Label(infoWindow,width=17, text=header, borderwidth=2,relief='ridge', anchor="w")
+        e.grid(row=0, column=i)
+        i+=1
     i = 1
-    e=Label(infoWindow,width=17,text='Donors id',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=0)
-    e=Label(infoWindow,width=17,text='First name',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=1)
-    e=Label(infoWindow,width=17,text='Last name',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=2)
-    e=Label(infoWindow,width=17,text='Date of Birth',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=3)
-    e=Label(infoWindow,width=17,text='Address',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=4)
-    e=Label(infoWindow,width=17,text='Phone Number',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=5)
-    e=Label(infoWindow,width=17,text='Email',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=6)
-    e=Label(infoWindow,width=17,text='Blood Type',borderwidth=2, relief='ridge',anchor='w')
-    e.grid(row=0,column=7)
     for wholename in cursor: 
         for j in range(len(wholename)):
             e = Label(infoWindow,width=17, text=wholename[j], borderwidth=2,relief='ridge', anchor="w")  
@@ -172,14 +97,8 @@ def retrieveGiving(fname, lname):
 
 
 
-
-
-
-
-
- 
 def add_data():
-    
+    table = insert.get()
     r = Toplevel(window)
     tree = ttk.Treeview(r)
     
@@ -190,7 +109,7 @@ def add_data():
     phoneNumber=tk.StringVar()
     email=tk.StringVar()
     bloodType=tk.StringVar()
-    cursor.execute("SELECT * from Donors")
+    cursor.execute(f"SELECT * from {table}")
     
     tree['show'] = 'headings'
 
@@ -219,7 +138,12 @@ def add_data():
 
     i = 0
     for ro in cursor:
-        tree.insert('', i, text="", values=(ro[0], ro[1], ro[2], ro[3], ro[4], ro[5], ro[6], ro[7]))
+        if (table == 'Donors' or table =='Recipients'):
+            tree.insert('', i, text="", values=(ro[0], ro[1], ro[2], ro[3], ro[4], ro[5], ro[6], ro[7]))
+        elif (table == 'Donations'):
+            tree.insert('', i, text="", values=(ro[0], ro[1], ro[2], ro[3], ro[4]))
+        elif (table == 'Transfusions'):
+            tree.insert('', i, text="", values=(ro[0], ro[1], ro[2], ro[3], ro[4]))
         i = i + 1
     
     tree.pack(ipadx='250', ipady='29')
@@ -283,12 +207,12 @@ def add_data():
         # adds the data to a list
         datalist = [s_firstName, s_lastName, dob, add, phone, e, bt]
         # inserts data into MySQL database
-        q.insertrow("Donors", datalist, cursor)
+        q.insertrow(f"{table}", datalist, cursor)
         print(cursor.lastrowid)
         cnx.commit()
         # life-view of data inserting
-        tree.insert('', 'end', text="", values=(31, s_firstName, s_lastName, dob, add, phone, e, bt))
-        mb.showinfo("Sucess", "donor registered")
+        tree.insert('', 'end', text="", values=(cursor.lastrowid - 1, s_firstName, s_lastName, dob, add, phone, e, bt))
+        mb.showinfo("Sucess", f"{table[:-1]} added")
         e1.delete(0, END)
         e2.delete(0, END)
         e3.delete(0, END)
@@ -297,8 +221,7 @@ def add_data():
         e6.delete(0, END)
         e7.delete(0, END)
         
-
-        
+    
     deletebutton = tk.Button(r, text="Delete", command=lambda: delete_data(tree))
     deletebutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
     deletebutton.place(x=600, y=580)
@@ -314,14 +237,12 @@ def add_data():
 
 
 def delete_data(tree):
+   table = insert.get()
    selected_item=tree.selection()[0]
    did=tree.item(selected_item)['values'][0]
-   q.deleterow("donors", did, cursor)
+   q.deleterow(table, did, cursor)
    tree.delete(selected_item)
-   mb.showinfo("Sucess", "donor deleted")
-
-    
-
+   mb.showinfo("Sucess", f"{table[:-1]}, deleted")
 
 
 # THE APP
@@ -331,10 +252,6 @@ def delete_data(tree):
 window = Tk()
 window.title("The Blood bank app") # window title
 window.geometry('450x470') # window size
-
-
-
-
 
 
 tablelabel = Label(window, text="Blood Bank Tables") # label for the tables
@@ -382,7 +299,6 @@ nameButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow
 nameButton.place(x=175, y=360)
 
 
-
 insert = Combobox(window, state = 'readonly') # create combobox
 insert['values']= ("Donors", "Recipients", "Donations", "Transfusions") #insert values to combobox
 insert.set("Select Table") # begin with empty box'
@@ -390,13 +306,6 @@ insert.place(x=105, y=400) # pos of combobox
 
 manupbutton = tk.Button(window, text="insert", command=lambda: add_data())
 manupbutton.place(x=175, y=430)
-
-
-
-
-
-
-
 
 
 window.mainloop()
