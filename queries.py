@@ -86,4 +86,4 @@ def findDonor(wholename, cursor):
     # check in the recipients table
     if (cursor.fetchone() == None):
         query = f"Select * from Recipients where concat (firstName, ' ' , lastName) = '{wholename}'"
-    return query
+        cursor.execute(query)

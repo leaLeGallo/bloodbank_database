@@ -1,5 +1,3 @@
-from cProfile import label
-from tkinter.tix import ROW
 from bloodBank import *
 import queries as q
 from tkinter.ttk import *
@@ -13,6 +11,7 @@ from tkinter import messagebox as mb
 cnx = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1', database = "Bloodbank")
 cursor = cnx.cursor(buffered=True)
  
+# CREATING AND POPULATING THE DATABASE
 
 try:
     cursor.execute("USE {}".format(DATABASE_NAME)) # function to use database
@@ -47,11 +46,13 @@ def retrieveTables():
     q.show_table(table, cursor)
     headers = [i[0] for i in cursor.description]
     i = 0
+    # show the column names
     for header in headers:
         e = Label(newWindow,width=17,text=header,borderwidth=2, relief='ridge',anchor='w')
         e.grid(row=0,column=i)
         i+=1
     i = 1
+    # show the rows
     for row in cursor:
         for j in range(len(row)):
             e = Label(newWindow,width=17, text=row[j], borderwidth=2,relief='ridge', anchor="w")  
@@ -60,20 +61,21 @@ def retrieveTables():
 
 def retrieveInfo(fname, lname):
     wholename = fname + " " + lname
-    infoWindow = Toplevel(window) # creat new window for info
-    cursor.execute(q.findDonor(wholename, cursor))
+    infoWindow = Toplevel(window) # create new window for info
+    q.findDonor(wholename, cursor)
     headers = [i[0] for i in cursor.description]
     i = 0
+    # show the column names
     for header in headers:
         e = Label(infoWindow,width=17, text=header, borderwidth=2,relief='ridge', anchor="w")
         e.grid(row=0, column=i)
         i+=1
     i = 1
+    # show the row
     for wholename in cursor: 
         for j in range(len(wholename)):
             e = Label(infoWindow,width=17, text=wholename[j], borderwidth=2,relief='ridge', anchor="w")
             e.grid(row=i, column=j) 
-            #e.insert(END, wholename[j])
         i=i+1
 
 def retrieveNextDonation(fname, lname):
@@ -144,7 +146,6 @@ def add_data():
     r.title("User detail")
     
     #Create all entries
-    
     headers.pop(0) # removing the index
 
     yas = 300
@@ -158,14 +159,12 @@ def add_data():
     def insert_data():
         entries = get_all_entry_widgets_text_content(r)
 
-        
         datalist = [entry.get() for entry in entries]
         # inserts data into MySQL database
         q.insertrow(table, datalist, cursor)
         cnx.commit()
         datalist.insert(0, cursor.lastrowid)
-        # life-view of data inserting
-        #tree.insert('', 'end', text="", values=(cursor.lastrowid, s_firstName, s_lastName, dob, add, phone, e, bt))
+        # insert data in interface table
         tree.insert('', 'end', text="", values=(datalist))
         #Success message
         mb.showinfo("Sucess", f"{table[:-1]} registered")
@@ -203,12 +202,9 @@ def delete_data(tree):
    mb.showinfo("Sucess", f"{table[:-1]}, deleted")
 
     
-
-
 # THE APP
 
 # Create the main window
-
 window = Tk()
 window.title("The Blood bank app") # window title
 window.geometry('450x470') # window size
@@ -248,7 +244,7 @@ nextdonButton = Button(window, text = "Choose", command = lambda: ('<<openNewWin
 nextdonButton.place(x=175, y=260)
 
 
-# create entry for gi
+# create entry to search who can give blood to a certain recipient
 labelgiving = Label(window, text="Enter first and last name of recipient to see who they can get blood from")
 labelgiving.place(x=2, y=300)
 fname = Entry(window, width=10)
@@ -259,7 +255,7 @@ nameButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow
 nameButton.place(x=175, y=360)
 
 
-
+# manipulating the tables
 insert = Combobox(window, state = 'readonly') # create combobox
 insert['values']= ("Donors", "Recipients", "Donations", "Transfusions") #insert values to combobox
 insert.set("Select Table") # begin with empty box'
