@@ -174,7 +174,6 @@ def add_data():
     
     headers.pop(0)
 
-    entries = []
 
     yas = 300
     for header in headers:
@@ -184,67 +183,14 @@ def add_data():
         label =Label(r, text=header, width=12, font=('Times', 11, 'bold'))
         label.place(x=400, y = yas)
         yas += 40
-        entries.append(entry)
 
-
-    '''
-    
-    l1=Label(r, text="First name", width=12, font=('Times', 11, 'bold'))
-    e1=Entry(r, textvariable=firstName, width=15)
-    l1.place(x=400, y=300)
-    e1.place(x=520, y=300)
-
-    l2=Label(r, text="Last name", width=12, font=('Times', 11, 'bold'))
-    e2=Entry(r, textvariable=lastName, width=15)
-    l2.place(x=400, y=340)
-    e2.place(x=520, y=340)
-
-    l3=Label(r, text="Date of birth", width=12, font=('Times', 11, 'bold'))
-    e3=Entry(r, textvariable=dateOfBirth, width=15)
-    l3.place(x=400, y=380)
-    e3.place(x=520, y=380)
-
-    l4=Label(r, text="Address", width=12, font=('Times', 11, 'bold'))
-    e4=Entry(r, textvariable=address, width=15)
-    l4.place(x=400, y=420)
-    e4.place(x=520, y=420)
-
-    l5=Label(r, text="Phone number", width=12, font=('Times', 11, 'bold'))
-    e5=Entry(r, textvariable=phoneNumber, width=15)
-    l5.place(x=400, y=460)
-    e5.place(x=520, y=460)
-
-    l6=Label(r, text="Email", width=12, font=('Times', 11, 'bold'))
-    e6=Entry(r, textvariable=email, width=15)
-    l6.place(x=400, y=500)
-    e6.place(x=520, y=500)
-
-    l7=Label(r, text="Blood type", width=12, font=('Times', 11, 'bold'))
-    e7=Entry(r, textvariable=bloodType, width=15)
-    l7.place(x=400, y=540)
-    e7.place(x=520, y=540)
-  
-    '''
     def insert_data():
-        '''
-        s_firstName = firstName.get()
-        s_lastName = lastName.get()
-        dob = dateOfBirth.get()
-        add = address.get()
-        phone = phoneNumber.get()
-        e = email.get()
-        bt = bloodType.get()
-        '''
-
         entries = get_all_entry_widgets_text_content(r)
 
-        '''
-        # adds the data to a list
-        datalist = [s_firstName, s_lastName, dob, add, phone, e, bt]
-        '''
+        
         datalist = [entry.get() for entry in entries]
         # inserts data into MySQL database
-        q.insertrow("Donors", datalist, cursor)
+        q.insertrow(table, datalist, cursor)
         cnx.commit()
         datalist.insert(0, cursor.lastrowid)
         # life-view of data inserting
@@ -256,15 +202,7 @@ def add_data():
         for widget in r.winfo_children():
             if isinstance(widget, Entry):
                 widget.delete(0, "end")
-        '''        
-        e1.delete(0, END)
-        e2.delete(0, END)
-        e3.delete(0, END)
-        e4.delete(0, END)
-        e5.delete(0, END)
-        e6.delete(0, END)
-        e7.delete(0, END)
-        '''
+
 
 
     deletebutton = tk.Button(r, text="Delete", command=lambda: delete_data(tree))
