@@ -99,8 +99,10 @@ def add_data():
     table = insert.get() # selected table
 
     r = Toplevel(window)
+    r.geometry("1050x700")
+    r.title("User detail")
+    r.resizable(False, False) 
     tree = ttk.Treeview(r)
-
 
     q.show_table(table, cursor)
     headers = [i[0] for i in cursor.description]
@@ -135,20 +137,20 @@ def add_data():
     hsb = ttk.Scrollbar(r, orient="horizontal")
     hsb.configure(command=tree.xview)
     tree.configure(xscrollcommand=hsb.set)
-    hsb.pack(fill=X, side = BOTTOM)
+    #hsb.pack(fill=X, side = BOTTOM)
+    hsb.place(x=75, y=290, width = 898)
 
     #Vertical scrollbar
     vsb = ttk.Scrollbar(r, orient="vertical")
     vsb.configure(command=tree.yview)
     tree.configure(yscrollcommand=vsb.set)
-    vsb.pack(fill=Y, side = RIGHT)
-    r.geometry("1050x700")
-    r.title("User detail")
+    #vsb.pack(fill=Y, side = RIGHT)
+    vsb.place(x=980, y=3, height=270)
     
     #Create all entries
     headers.pop(0) # removing the index
 
-    yas = 300
+    yas = 320
     for header in headers:
         entry=Entry(r, width=15)
         entry.place(x=520, y = yas )
@@ -177,15 +179,15 @@ def add_data():
 
     deletebutton = tk.Button(r, text="Delete", command=lambda: delete_data(tree))
     deletebutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
-    deletebutton.place(x=600, y=580)
+    deletebutton.place(x=600, y=590)
 
     submitbutton = tk.Button(r, text="Submit", command= insert_data)
     submitbutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
-    submitbutton.place(x=500, y=580)
+    submitbutton.place(x=500, y=590)
 
     cancelbutton = tk.Button(r, text="Cancel", command=r.destroy)
     cancelbutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
-    cancelbutton.place(x=550, y=620)
+    cancelbutton.place(x=550, y=630)
 
 
 def get_all_entry_widgets_text_content(root):
