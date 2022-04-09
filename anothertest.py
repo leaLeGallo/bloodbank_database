@@ -1,3 +1,4 @@
+from tracemalloc import start
 from bloodBank import *
 import queries as q
 from tkinter.ttk import *
@@ -7,11 +8,9 @@ from tkinter import *
 from tkinter import messagebox as mb
 
 
-
 cnx = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1', database = "Bloodbank")
 cursor = cnx.cursor(buffered=True)
  
-# CREATING AND POPULATING THE DATABASE
 
 try:
     cursor.execute("USE {}".format(DATABASE_NAME)) # function to use database
@@ -41,28 +40,32 @@ else:
 # METHODS FOR THE APP
 
 def retrieveTables():
-    table = combo.get()
-    newWindow = tk.Tk()
-    q.show_table(table, cursor)
-    headers = [i[0] for i in cursor.description]
-    i = 0
-    # show the column names
-    for header in headers:
-        e = Label(newWindow,width=17,text=header,borderwidth=2, relief='ridge',anchor='w')
-        e.grid(row=0,column=i)
-        i+=1
-    i = 1
-    # show the rows
-    for row in cursor:
-        for j in range(len(row)):
-            e = Label(newWindow,width=17, text=row[j], borderwidth=2,relief='ridge', anchor="w")  
-            e.grid(row=i, column=j) 
-        i+=1
+    try:
+        table = combo.get()
+        newWindow = tk.Tk()
+        newWindow.title(f"{table}")
+        q.show_table(table, cursor)
+        headers = [i[0] for i in cursor.description]
+        i = 0
+        for header in headers:
+            e = Label(newWindow,width=17, text=header, borderwidth=2,relief='ridge', anchor="w")
+            e.grid(row=0, column=i)
+            i+=1
+        i = 1
+        for row in cursor: 
+            for j in range(len(row)):
+                e = Label(newWindow,width=17, text=row[j], borderwidth=2,relief='ridge', anchor="w")  
+                e.grid(row=i, column=j)   
+            i+=1
+    except:
+        mb.showerror("Failure", "No table selected")
+        newWindow.destroy()
 
 def retrieveInfo(fname, lname):
+    
     wholename = fname + " " + lname
     infoWindow = Toplevel(window) # create new window for info
-    q.findDonor(wholename, cursor)
+    cursor.execute(q.find_person(wholename, cursor))
     headers = [i[0] for i in cursor.description]
     i = 0
     # show the column names
@@ -77,105 +80,111 @@ def retrieveInfo(fname, lname):
             e = Label(infoWindow,width=17, text=wholename[j], borderwidth=2,relief='ridge', anchor="w")
             e.grid(row=i, column=j) 
         i=i+1
-
+    if (i == 1):
+        mb.showerror("Failure", "No-one found with that name")
+        infoWindow.destroy()
+        
+    
+        
 def retrieveNextDonation(fname, lname):
-    wholename = fname + " " + lname
-    donationWindow = Toplevel(window) # new window for donation
-    donationWindow.title(wholename) # title 
-    nextdonlabel = Label( donationWindow, text = q.nextdonation(wholename, cursor) ) # call nextDonation
-    donationWindow.geometry('300x100')
-    nextdonlabel.grid(column=0, row=0)
+    try:
+        wholename = fname + " " + lname
+        donationWindow = Toplevel(window) # new window for donation
+        donationWindow.title(wholename) # title 
+        nextdonlabel = Label( donationWindow, text = q.nextdonation(wholename, cursor) ) # call nextDonation
+        donationWindow.geometry('300x100')
+        nextdonlabel.grid(column=0, row=0)
+    except:
+        mb.showerror("Failure", "No donor found with that name")
+        donationWindow.destroy()
 
 def retrieveGiving(fname, lname):
-    wholename = fname + " " + lname
-    givingWindow = Toplevel(window)
-    givingWindow.title(wholename)
-    lbl = Label( givingWindow,
-    text = q.givingblood(wholename, cursor) )
-    givingWindow.geometry('300x300')
-    lbl.grid(column=0, row=0)
-
+    try:
+        wholename = fname + " " + lname
+        givingWindow = Toplevel(window)
+        givingWindow.title(wholename)
+        lbl = Label( givingWindow,
+        text = q.givingblood(wholename, cursor) )
+        givingWindow.geometry('300x300')
+        lbl.grid(column=0, row=0)
+    except:
+        mb.showerror("Failure", "No recipient found with that name")
+        givingWindow.destroy()
+        
 def add_data():
-    table = insert.get() # selected table
+    try:
+        table = insert.get()
+        r = Toplevel(window)
+        tree = ttk.Treeview(r)
+        q.show_table(table, cursor)
+        headers = [i[0] for i in cursor.description]
+        tree['show'] = 'headings'
+        
+        r.geometry("1050x700")
+        r.title("User detail")
 
-    r = Toplevel(window)
-    r.geometry("1050x700")
-    r.title("User detail")
-    r.resizable(False, False) 
-    tree = ttk.Treeview(r)
+        s = ttk.Style(window)
+        s.theme_use("clam")
+        s.configure(".", font = ('Helvetica', 11))
+        s.configure("Treeview.Heading", foreground='red')
 
-    q.show_table(table, cursor)
-    headers = [i[0] for i in cursor.description]
+        tree["columns"] = (headers)
+        for header in headers:
+            tree.column(header, width=50, minwidth=150, anchor=tk.CENTER)
+        #Create headings
+        for header in headers:
+            tree.heading(header, text=header, anchor=tk.CENTER)
+        i = 0
+        for row in cursor:
+            tree.insert('', "end", text="", values = row)
+            i = i + 1
+        
+        tree.pack(ipadx='250', ipady='29')
+        
+        #Horizontal scrollbar 
+        hsb = ttk.Scrollbar(r, orient="horizontal")
+        hsb.configure(command=tree.xview)
+        tree.configure(xscrollcommand=hsb.set)
+        #hsb.pack(fill=X, side = BOTTOM)
+        hsb.place(x=75, y=290, width = 898)
 
-
-    tree['show'] = 'headings' #ask gummi about that
-
-    # style
-    s = ttk.Style(window)
-    s.theme_use("clam")
-    s.configure(".", font = ('Helvetica', 11))
-    s.configure("Treeview.Heading", foreground='red')
-
-    #Define columns
-    tree["columns"] = (headers)
-
-    #Format columns
-    for header in headers:
-        tree.column(header, width=50, minwidth=150, anchor=tk.CENTER)
-
-    #Create headings
-    for header in headers:
-        tree.heading(header, text=header, anchor=tk.CENTER)
-
-    #Insert rows
-    for row in cursor:
-        tree.insert('', "end", text="", values = row)
-    
-    tree.pack(ipadx='250', ipady='29')
-
-    #Horizontal scrollbar 
-    hsb = ttk.Scrollbar(r, orient="horizontal")
-    hsb.configure(command=tree.xview)
-    tree.configure(xscrollcommand=hsb.set)
-    #hsb.pack(fill=X, side = BOTTOM)
-    hsb.place(x=75, y=290, width = 898)
-
-    #Vertical scrollbar
-    vsb = ttk.Scrollbar(r, orient="vertical")
-    vsb.configure(command=tree.yview)
-    tree.configure(yscrollcommand=vsb.set)
-    #vsb.pack(fill=Y, side = RIGHT)
-    vsb.place(x=980, y=3, height=270)
-    
-    #Create all entries
-    headers.pop(0) # removing the index
-
-    yas = 320
-    for header in headers:
-        entry=Entry(r, width=15)
-        entry.place(x=520, y = yas )
-        label =Label(r, text=header, width=12, font=('Times', 11, 'bold'))
-        label.place(x=400, y = yas)
-        yas += 40
-
+        #Vertical scrollbar
+        vsb = ttk.Scrollbar(r, orient="vertical")
+        vsb.configure(command=tree.yview)
+        tree.configure(yscrollcommand=vsb.set)
+        #vsb.pack(fill=Y, side = RIGHT)
+        vsb.place(x=980, y=3, height=270)
+        
+            
+        headers.pop(0)
+        entries = []
+        yas = 320
+        for header in headers:
+            entry=Entry(r, width=15)
+            entry.place(x=520, y = yas )
+            label =Label(r, text=header, width=12, font=('Times', 11, 'bold'))
+            label.place(x=400, y = yas)
+            yas += 40
+    except:
+        mb.showerror("Failure", "No table selected")
+        r.destroy()
+        
     def insert_data():
-        entries = get_all_entry_widgets_text_content(r)
-
-        datalist = [entry.get() for entry in entries]
-        # inserts data into MySQL database
-        q.insertrow(table, datalist, cursor)
-        cnx.commit()
-        datalist.insert(0, cursor.lastrowid)
-        # insert data in interface table
-        tree.insert('', 'end', text="", values=(datalist))
-        #Success message
-        mb.showinfo("Sucess", f"{table[:-1]} registered")
-        #Empty all entry widgets
-        for widget in r.winfo_children():
-            if isinstance(widget, Entry):
-                widget.delete(0, "end")
-
-
+        try:
+            entries = get_all_entry(r)
+            datalist = [entry.get() for entry in entries]
+            q.insertrow(table, datalist, cursor)
+            cnx.commit()
+            datalist.insert(0, cursor.lastrowid)
+            tree.insert('', 'end', text="", values=(datalist))
+            #Success message2    
+            mb.showinfo("Sucess", f"{table[:-1]} registered")
+            #Empty all entry widgets
+            for widget in r.winfo_children():
+                if isinstance(widget, Entry):
+                    widget.delete(0, "end")
+        except:
+            mb.showerror("Failure", "Incorrect insertion or empty box!")
 
     deletebutton = tk.Button(r, text="Delete", command=lambda: delete_data(tree))
     deletebutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
@@ -189,24 +198,23 @@ def add_data():
     cancelbutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
     cancelbutton.place(x=550, y=630)
 
-
-def get_all_entry_widgets_text_content(root):
+def get_all_entry(root):
     all_entries = [widget for widget in root.winfo_children() if isinstance(widget, Entry)]
     return all_entries
 
-
 def delete_data(tree):
-   table = insert.get()
-   selected_item=tree.selection()[0]
-   did=tree.item(selected_item)['values'][0]
-   q.deleterow(table, did, cursor)
-   tree.delete(selected_item)
-   mb.showinfo("Sucess", f"{table[:-1]}, deleted")
+    table = insert.get()
+    selected_item=tree.selection()[0]
+    did=tree.item(selected_item)['values'][0]
+    q.deleterow(table, did, cursor)
+    tree.delete(selected_item)
+    mb.showinfo("Sucess", f"{table[:-1]}, deleted")
 
-    
+
 # THE APP
 
 # Create the main window
+
 window = Tk()
 window.title("The Blood bank app") # window title
 window.geometry('450x470') # window size
@@ -246,7 +254,7 @@ nextdonButton = Button(window, text = "Choose", command = lambda: ('<<openNewWin
 nextdonButton.place(x=175, y=260)
 
 
-# create entry to search who can give blood to a certain recipient
+# create entry for gi
 labelgiving = Label(window, text="Enter first and last name of recipient to see who they can get blood from")
 labelgiving.place(x=2, y=300)
 fname = Entry(window, width=10)
@@ -257,7 +265,7 @@ nameButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow
 nameButton.place(x=175, y=360)
 
 
-# manipulating the tables
+
 insert = Combobox(window, state = 'readonly') # create combobox
 insert['values']= ("Donors", "Recipients", "Donations", "Transfusions") #insert values to combobox
 insert.set("Select Table") # begin with empty box'
