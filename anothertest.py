@@ -63,20 +63,27 @@ def retrieveTables():
         newWindow.destroy()
 
 def retrieveInfo(fname, lname):
+    
     wholename = fname + " " + lname
-    infoWindow = Toplevel(window) # creat new window for info
+    infoWindow = Toplevel(window) # create new window for info
     cursor.execute(q.findDonor(wholename, cursor))
     headers = [i[0] for i in cursor.description]
     i = 0
+    # show the column names
     for header in headers:
         e = Label(infoWindow,width=17, text=header, borderwidth=2,relief='ridge', anchor="w")
         e.grid(row=0, column=i)
         i+=1
+    i = 1
+    # show the row
     for wholename in cursor: 
         for j in range(len(wholename)):
-            e = Label(infoWindow,width=17, text=wholename[j], borderwidth=2,relief='ridge', anchor="w")  
-            e.grid(row=i, column=j)
+            e = Label(infoWindow,width=17, text=wholename[j], borderwidth=2,relief='ridge', anchor="w")
+            e.grid(row=i, column=j) 
         i=i+1
+    if (i == 1):
+        mb.showerror("Failure", "No-one found with that name")
+        infoWindow.destroy()
         
     
         
@@ -135,27 +142,30 @@ def add_data():
         
         tree.pack(ipadx='250', ipady='29')
         
+        #Horizontal scrollbar 
         hsb = ttk.Scrollbar(r, orient="horizontal")
         hsb.configure(command=tree.xview)
         tree.configure(xscrollcommand=hsb.set)
-        hsb.pack(fill = X, side = TOP)
+        #hsb.pack(fill=X, side = BOTTOM)
+        hsb.place(x=75, y=290, width = 898)
 
+        #Vertical scrollbar
         vsb = ttk.Scrollbar(r, orient="vertical")
         vsb.configure(command=tree.yview)
         tree.configure(yscrollcommand=vsb.set)
-        vsb.pack(fill=Y, side = RIGHT)
+        #vsb.pack(fill=Y, side = RIGHT)
+        vsb.place(x=980, y=3, height=270)
         
             
         headers.pop(0)
         entries = []
-        yas = 300
+        yas = 320
         for header in headers:
             entry=Entry(r, width=15)
             entry.place(x=520, y = yas )
             label =Label(r, text=header, width=12, font=('Times', 11, 'bold'))
             label.place(x=400, y = yas)
             yas += 40
-            entries.append(entry)
     except:
         mb.showerror("Failure", "No table selected")
         r.destroy()
@@ -179,15 +189,15 @@ def add_data():
 
     deletebutton = tk.Button(r, text="Delete", command=lambda: delete_data(tree))
     deletebutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
-    deletebutton.place(x=600, y=580)
+    deletebutton.place(x=600, y=590)
 
     submitbutton = tk.Button(r, text="Submit", command= insert_data)
     submitbutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
-    submitbutton.place(x=500, y=580)
+    submitbutton.place(x=500, y=590)
 
     cancelbutton = tk.Button(r, text="Cancel", command=r.destroy)
     cancelbutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
-    cancelbutton.place(x=550, y=620)
+    cancelbutton.place(x=550, y=630)
 
 def get_all_entry(root):
     all_entries = [widget for widget in root.winfo_children() if isinstance(widget, Entry)]
@@ -254,6 +264,7 @@ lname = Entry(window, width=10)
 lname.place(x=225, y=330)
 nameButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow>>', retrieveGiving(fname.get(), lname.get())))
 nameButton.place(x=175, y=360)
+
 
 
 insert = Combobox(window, state = 'readonly') # create combobox
