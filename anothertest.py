@@ -10,7 +10,7 @@ from tkinter import messagebox as mb
 cnx = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1')
 cursor = cnx.cursor(buffered=True)
  
-
+  
 try:
     cursor.execute("USE {}".format(DATABASE_NAME)) # function to use database
 except mysql.connector.Error as err:
@@ -33,7 +33,6 @@ except mysql.connector.Error as err:
         print(err)
 else:
     print("Database {} already exists".format(DATABASE_NAME))
-
 
 
 # METHODS FOR THE APP
@@ -204,6 +203,7 @@ def get_all_entry(root):
     return all_entries
 
 def delete_data(tree):
+
     table = insert.get()
     selected_item=tree.selection()[0]
     did=tree.item(selected_item)['values'][0]
@@ -232,9 +232,10 @@ combo.place(x=105, y=30) # pos of combobox
 tableButton = Button(window, text = "Choose", command = retrieveTables)
 tableButton.place(x=175, y=60) # pos for button
 
-
 # creating entry to insert firstName to find all information about donors
+
 infolabel = Label(window, text="Enter a person's first  and last name to see their information:")
+
 infolabel.place(x=47, y=100)
 firName = Entry(window, width=10) # create entry
 firName.place(x=115, y=130)
@@ -243,9 +244,10 @@ lasName.place(x=225, y=130)
 infoButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow>>', retrieveInfo(firName.get(), lasName.get())))
 infoButton.place(x=175, y=160)
 
-
 # create entry to find when donors can donate next
+
 nextdonlabel = Label(window, text="Enter a donor's first  and last name to know when they can donate again:")
+
 nextdonlabel.place(x=2, y=200)
 frstName = Entry(window, width=10) # create entry
 frstName.place(x=115, y=230)
@@ -257,6 +259,7 @@ nextdonButton.place(x=175, y=260)
 
 # create entry for gi
 labelgiving = Label(window, text="Enter first and last name of a recipient to see who they can get blood from:")
+
 labelgiving.place(x=2, y=300)
 fname = Entry(window, width=10)
 fname.place(x=115, y=330)
@@ -266,11 +269,11 @@ nameButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow
 nameButton.place(x=175, y=360)
 
 
-
 insert = Combobox(window, state = 'readonly') # create combobox
 insert['values']= ("Donors", "Recipients", "Donations", "Transfusions") #insert values to combobox
 insert.set("Select Table") # begin with empty box'
 insert.place(x=105, y=400) # pos of combobox
+
 
 manupbutton = tk.Button(window, text="insert", command=lambda: add_data())
 manupbutton.place(x=175, y=430)

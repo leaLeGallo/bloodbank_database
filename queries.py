@@ -24,7 +24,6 @@ def nextdonation(wholename, cursor):
 
 # inserts a row into any table
 def insertrow(table, values, cursor):
-
     # HEADERS
     query = f"select * from {table}"
     cursor.execute(query)

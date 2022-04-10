@@ -3,8 +3,8 @@ from mysql.connector import errorcode
 import csv
 
 
-# Connects to SQL server
-cnx = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1')
+cnx= mysql.connector.connect(user='root', password='root', host='127.0.0.1:8889', unix_socket= '/Applications/MAMP/tmp/mysql/mysql.sock')
+
 cursor = cnx.cursor(buffered=True)
 
 
@@ -193,5 +193,6 @@ def top_saviours_view(cursor):
             " from donors join donations on donors.donorsID = donations.donorsID"\
             " join transfusions on transfusions.donationsID = donations.donationsID"\
             " group by transfusions.donationsID order by people_saved desc limit 3"
+
     cursor.execute(query)
 

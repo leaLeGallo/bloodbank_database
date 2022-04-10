@@ -145,8 +145,10 @@ def add_data(tree):
 def delete_data(tree):
    selected_item=tree.selection()[0]
    print(tree.item(selected_item)['values'])
+
    did=tree.item(selected_item)['values'][0]
    q.deleterow("donors", did, conn)
+
    tree.delete(selected_item)
    mb.showinfo("Success", "donor deleted")
 
