@@ -109,7 +109,8 @@ def create_tables_donations(cursor):
                  "  date date NOT NULL," \
                  "  quantity int(100) NOT NULL," \
                  "  expired int(1) NOT NULL," \
-                 "  PRIMARY KEY (donationsID)" \
+                 "  PRIMARY KEY (donationsID)," \
+                 "  FOREIGN KEY (donorsID) REFERENCES donors(donorsID)"\
                  ") ENGINE=InnoDB"
     try:
         print("Creating table donations: ") # try create tables
@@ -143,11 +144,13 @@ def create_tables_transfusions(cursor): # function to create tables in database
     create_transfusions = "CREATE TABLE transfusions (" \
                  "  transfusionsID int(100) NOT NULL AUTO_INCREMENT," \
                  "  date date NOT NULL," \
-                 "  recipientID int(100) NOT NULL," \
+                 "  recipientsID int(100) NOT NULL," \
                  "  quantity int(100) NOT NULL," \
                  "  bloodtype varchar(100) NOT NULL," \
                  "  donationsID int(100) NOT NULL," \
-                 "  PRIMARY KEY (transfusionsID)" \
+                 "  PRIMARY KEY (transfusionsID)," \
+                 "  FOREIGN KEY (recipientsID) REFERENCES recipients(recipientsID),"\
+                 "  FOREIGN KEY (donationsID) REFERENCES donations(donationsID)"\
                  ") ENGINE=InnoDB"
     try:
         print("Creating table transfusions: ") # try create tables
@@ -167,7 +170,7 @@ def insert_into_transfusions(cursor):
         # iterates through the rows
         for row in transfusionsfile:
             try: # adding the values of each rows 
-                cursor.execute("INSERT INTO transfusions(date, recipientID, quantity, bloodtype, donationsID)"\
+                cursor.execute("INSERT INTO transfusions(date, recipientsID, quantity, bloodtype, donationsID)"\
                                "VALUES (%s, %s, %s, %s, %s);", row)
             except mysql.connector.Error as err:
                 print(err.msg)

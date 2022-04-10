@@ -1,4 +1,3 @@
-from tracemalloc import start
 from bloodBank import *
 import queries as q
 from tkinter.ttk import *
@@ -8,7 +7,7 @@ from tkinter import *
 from tkinter import messagebox as mb
 
 
-cnx = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1', database = "Bloodbank")
+cnx = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1')
 cursor = cnx.cursor(buffered=True)
  
 
@@ -156,14 +155,16 @@ def add_data():
         vsb.place(x=980, y=3, height=270)
         
             
-        headers.pop(0)
-        entries = []
+        headers.pop(0) # remove first column
         yas = 320
         for header in headers:
-            entry=Entry(r, width=15)
+            entry = Entry(r, width=15)
             entry.place(x=520, y = yas )
-            label =Label(r, text=header, width=12, font=('Times', 11, 'bold'))
-            label.place(x=400, y = yas)
+            label = Label(r, text=header, width=12, font=('Times', 11, 'bold'))
+            if (header == "date" or header=="dateOfBirth"):
+                format = Label(r, text="(format: yyyy-mm-dd)", width=15, font=('Times', 11, 'bold'))
+                format.place(x=630, y=yas)
+            label.place(x=400, y=yas)
             yas += 40
     except:
         mb.showerror("Failure", "No table selected")
@@ -233,7 +234,7 @@ tableButton.place(x=175, y=60) # pos for button
 
 
 # creating entry to insert firstName to find all information about donors
-infolabel = Label(window, text="Enter a person's first  and last name to see their information")
+infolabel = Label(window, text="Enter a person's first  and last name to see their information:")
 infolabel.place(x=47, y=100)
 firName = Entry(window, width=10) # create entry
 firName.place(x=115, y=130)
@@ -244,7 +245,7 @@ infoButton.place(x=175, y=160)
 
 
 # create entry to find when donors can donate next
-nextdonlabel = Label(window, text="Enter a donor's first  and last name to know when they can donate again")
+nextdonlabel = Label(window, text="Enter a donor's first  and last name to know when they can donate again:")
 nextdonlabel.place(x=2, y=200)
 frstName = Entry(window, width=10) # create entry
 frstName.place(x=115, y=230)
@@ -255,7 +256,7 @@ nextdonButton.place(x=175, y=260)
 
 
 # create entry for gi
-labelgiving = Label(window, text="Enter first and last name of recipient to see who they can get blood from")
+labelgiving = Label(window, text="Enter first and last name of a recipient to see who they can get blood from:")
 labelgiving.place(x=2, y=300)
 fname = Entry(window, width=10)
 fname.place(x=115, y=330)
