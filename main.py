@@ -52,6 +52,7 @@ print(56 - int(diff.days))
 
 from tkinter import *
 
+
 from tkinter.ttk import *
 
 def retrieve():
@@ -145,6 +146,7 @@ lbl2.grid(column=0, row=7)
 nameButton = Button(window, text = "Choose", command = enter1.bind('<<openNewWindow>>', thething))
 nameButton.grid(column=0, row=9)
 
+
 entergiving = Entry(window)
 entergiving.grid(column=0, row=10)
 lblgiving = Label(window, text="Can the person donate again by both name")
@@ -153,5 +155,5 @@ nameButton = Button(window, text = "Choose", command = entergiving.bind('<<openN
 nameButton.grid(column=0, row=12)
 
 
-window.mainloop()
 
+window.mainloop()

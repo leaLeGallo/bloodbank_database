@@ -64,13 +64,13 @@ def insert_into_donors(cursor):
 def create_tables_recipients(cursor): 
     create_recipients = "CREATE TABLE recipients (" \
                  "  recipientsID int(100) NOT NULL AUTO_INCREMENT," \
-                 "  firstName varchar(10)," \
-                 "  lastName varchar(40)," \
-                 "  dateOfBirth date," \
-                 "  address varchar(50)," \
-                 "  phoneNumber varchar(50)," \
-                 "  email varchar(50)," \
-                 "  bloodType varchar(3)," \
+                 "  firstName varchar(10) NOT NULL," \
+                 "  lastName varchar(40) NOT NULL," \
+                 "  dateOfBirth date NOT NULL," \
+                 "  address varchar(50) NOT NULL," \
+                 "  phoneNumber varchar(50) NOT NULL," \
+                 "  email varchar(50) NOT NULL," \
+                 "  bloodType varchar(3) NOT NULL," \
                  "  PRIMARY KEY (recipientsID)" \
                  ") ENGINE=InnoDB"
     try:
@@ -105,11 +105,12 @@ def insert_into_recipients(cursor):
 def create_tables_donations(cursor): 
     create_donations = "CREATE TABLE donations (" \
                  "  donationsID int(100) NOT NULL AUTO_INCREMENT," \
-                 "  donorsID int(100)," \
-                 "  date date," \
-                 "  quantity int(100)," \
-                 "  expired int(1)," \
-                 "  PRIMARY KEY (donationsID)" \
+                 "  donorsID int(100) NOT NULL," \
+                 "  date date NOT NULL," \
+                 "  quantity int(100) NOT NULL," \
+                 "  expired int(1) NOT NULL," \
+                 "  PRIMARY KEY (donationsID)," \
+                 "  FOREIGN KEY (donorsID) REFERENCES donors(donorsID)"\
                  ") ENGINE=InnoDB"
     try:
         print("Creating table donations: ") # try create tables
@@ -142,12 +143,14 @@ def insert_into_donations(cursor):
 def create_tables_transfusions(cursor): # function to create tables in database
     create_transfusions = "CREATE TABLE transfusions (" \
                  "  transfusionsID int(100) NOT NULL AUTO_INCREMENT," \
-                 "  date date," \
-                 "  recipientID int(100)," \
-                 "  quantity int(100)," \
-                 "  bloodtype varchar(100)," \
-                 "  donationsID int(100)," \
-                 "  PRIMARY KEY (transfusionsID)" \
+                 "  date date NOT NULL," \
+                 "  recipientsID int(100) NOT NULL," \
+                 "  quantity int(100) NOT NULL," \
+                 "  bloodtype varchar(100) NOT NULL," \
+                 "  donationsID int(100) NOT NULL," \
+                 "  PRIMARY KEY (transfusionsID)," \
+                 "  FOREIGN KEY (recipientsID) REFERENCES recipients(recipientsID),"\
+                 "  FOREIGN KEY (donationsID) REFERENCES donations(donationsID)"\
                  ") ENGINE=InnoDB"
     try:
         print("Creating table transfusions: ") # try create tables
@@ -167,7 +170,7 @@ def insert_into_transfusions(cursor):
         # iterates through the rows
         for row in transfusionsfile:
             try: # adding the values of each rows 
-                cursor.execute("INSERT INTO transfusions(date, recipientID, quantity, bloodtype, donationsID)"\
+                cursor.execute("INSERT INTO transfusions(date, recipientsID, quantity, bloodtype, donationsID)"\
                                "VALUES (%s, %s, %s, %s, %s);", row)
             except mysql.connector.Error as err:
                 print(err.msg)
@@ -181,7 +184,7 @@ def create_stocks_view(cursor):
     query = "create view availableStocks as select bloodType, sum(donations.quantity) as stock from donors"\
             " join donations on donors.donorsID = donations.donorsID "\
             " where donations.donationsID not in (select donationsID from transfusions)"\
-            " group by bloodtype"\
+            " group by bloodType"\
             " order by stock desc"
     cursor.execute(query)
 
