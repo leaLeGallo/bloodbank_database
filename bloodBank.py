@@ -3,9 +3,9 @@ from mysql.connector import errorcode
 import csv
 
 
-cnx= mysql.connector.connect(user='root', password='root', host='127.0.0.1:8889', unix_socket= '/Applications/MAMP/tmp/mysql/mysql.sock')
-
+cnx = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1')
 cursor = cnx.cursor(buffered=True)
+ 
 
 
 DATABASE_NAME = 'BloodBank' 

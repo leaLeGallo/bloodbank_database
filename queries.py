@@ -9,7 +9,7 @@ def show_table(table, cursor):
     query = f"select * from {table}"
     cursor.execute(query)
 
-# returns a sentence saying how many days are needed for a donor to give blood again
+# returns a sentence statting how many days are needed for a donor to give blood again
 def nextdonation(wholename, cursor):
     query = f"select date from donations join donors on donations.donorsID = donors.donorsID where concat (firstName, ' ' ,lastName) = '{wholename}'"
     cursor.execute(query)
@@ -45,9 +45,6 @@ def insertrow(table, values, cursor):
 def deleterow(table, row, cursor):
     query = f"delete from {table} where {table}ID = {row}"
     cursor.execute(query)
-    cnx.commit()
-    query2 = f"alter table {table} auto_increment = 1"   # reset auto increment
-    cursor.execute(query2)
     cnx.commit()
 
 def givingblood(wholename, cursor):
