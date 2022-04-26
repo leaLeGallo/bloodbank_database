@@ -1,3 +1,5 @@
+# Methods to create and populate the database.
+
 import mysql.connector
 from mysql.connector import errorcode
 import csv
