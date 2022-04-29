@@ -1,5 +1,5 @@
-# The application's interface.
 
+from tracemalloc import start
 from bloodBank import *
 import queries as q
 from tkinter.ttk import *
@@ -9,10 +9,10 @@ from tkinter import *
 from tkinter import messagebox as mb
 
 
-cnx = mysql.connector.connect(user='root', password='Ihtwasc?', host='127.0.0.1')
+cnx= mysql.connector.connect(user='root', password='root', host='127.0.0.1:8889', unix_socket= '/Applications/MAMP/tmp/mysql/mysql.sock')
 cursor = cnx.cursor(buffered=True)
  
-  
+
 try:
     cursor.execute("USE {}".format(DATABASE_NAME)) # function to use database
 except mysql.connector.Error as err:
@@ -161,14 +161,15 @@ def add_data():
             
         headers.pop(0) # remove first column
         yas = 320
+        xas = 520
         for header in headers:
             entry = Entry(addWindow, width=15)
-            entry.place(x=520, y = yas )
+            entry.place(x=xas, y = yas )
             label = Label(addWindow, text=header, width=12, font=('Times', 11, 'bold'))
             # instruction for dates
             if (header == "date" or header=="dateOfBirth"):
-                format = Label(addWindow, text="(format: yyyy-mm-dd)", width=15, font=('Times', 11, 'bold'))
-                format.place(x=630, y=yas)
+                format = Label(addWindow, text="(format: yyyy-mm-dd)", width=18, font=('Times', 11, 'bold'))
+                format.place(x=xas + 150, y=yas)
             label.place(x=400, y=yas)
             yas += 40
     except:
@@ -194,15 +195,17 @@ def add_data():
 
     deletebutton = tk.Button(addWindow, text="Delete", command=lambda: delete_data(tree))
     deletebutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
-    deletebutton.place(x=600, y=590)
+    deletebutton.place(x=100, y=330)
+    deleteLabel = Label(addWindow, text="Select a row you want to delete", width=30, font=('Times', 11, 'bold'))
+    deleteLabel.place(x=50, y=350)
 
     submitbutton = tk.Button(addWindow, text="Submit", command= insert_data)
     submitbutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
-    submitbutton.place(x=500, y=590)
+    submitbutton.place(x=500, y=600)
 
     cancelbutton = tk.Button(addWindow, text="Cancel", command=addWindow.destroy)
     cancelbutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
-    cancelbutton.place(x=550, y=630)
+    cancelbutton.place(x=600, y=600)
 
 
 def get_all_entry(root):
@@ -226,6 +229,7 @@ def delete_data(tree):
 window = Tk()
 window.title("The Blood bank app") # window title
 window.geometry('450x470') # window size
+window.resizable(width=False, height=False)
 
 
 tablelabel = Label(window, text="Blood Bank Tables") # label for the tables
