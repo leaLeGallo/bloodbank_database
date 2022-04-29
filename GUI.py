@@ -43,26 +43,26 @@ else:
 def retrieveTables():
     try:
         table = combo.get()
-        newWindow = tk.Tk() # create new window for the table
-        newWindow.title(f"{table}")
+        tableWindow = tk.Tk() # create new window for the table
+        tableWindow.title(f"{table}")
         q.show_table(table, cursor)
         headers = [i[0] for i in cursor.description]
         i = 0
         # show the column names
         for header in headers:
-            e = Label(newWindow,width=17, text=header, borderwidth=2,relief='ridge', anchor="w")
+            e = Label(tableWindow,width=17, text=header, borderwidth=2,relief='ridge', anchor="w")
             e.grid(row=0, column=i)
             i+=1
         i = 1
         # show the rows
         for row in cursor: 
             for j in range(len(row)):
-                e = Label(newWindow,width=17, text=row[j], borderwidth=2,relief='ridge', anchor="w")  
+                e = Label(tableWindow,width=17, text=row[j], borderwidth=2,relief='ridge', anchor="w")  
                 e.grid(row=i, column=j)   
             i+=1
     except:
         mb.showerror("Failure", "No table selected")
-        newWindow.destroy()
+        tableWindow.destroy()
 
 def retrieveInfo(fname, lname):
     
@@ -117,14 +117,15 @@ def retrieveGiving(fname, lname):
 def add_data():
     try:
         table = insert.get()
-        r = Toplevel(window) # new window showing the modifiable table
-        tree = ttk.Treeview(r)
+        addWindow = Toplevel(window) # new window showing the modifiable table
+        tree = ttk.Treeview(addWindow)
         q.show_table(table, cursor)
         headers = [i[0] for i in cursor.description] # retrieve headers
         tree['show'] = 'headings'
         
-        r.geometry("1050x700")
-        r.title("User detail")
+        addWindow.geometry("1050x700")
+        addWindow.title("User detail")
+        addWindow.resizable(width=False, height=False)
 
         s = ttk.Style(window)
         s.theme_use("clam")
@@ -146,13 +147,13 @@ def add_data():
         tree.pack(ipadx='250', ipady='29')
         
         #Horizontal scrollbar 
-        hsb = ttk.Scrollbar(r, orient="horizontal")
+        hsb = ttk.Scrollbar(addWindow, orient="horizontal")
         hsb.configure(command=tree.xview)
         tree.configure(xscrollcommand=hsb.set)
         hsb.place(x=75, y=290, width = 898)
 
         #Vertical scrollbar
-        vsb = ttk.Scrollbar(r, orient="vertical")
+        vsb = ttk.Scrollbar(addWindow, orient="vertical")
         vsb.configure(command=tree.yview)
         tree.configure(yscrollcommand=vsb.set)
         vsb.place(x=980, y=3, height=270)
@@ -161,22 +162,22 @@ def add_data():
         headers.pop(0) # remove first column
         yas = 320
         for header in headers:
-            entry = Entry(r, width=15)
+            entry = Entry(addWindow, width=15)
             entry.place(x=520, y = yas )
-            label = Label(r, text=header, width=12, font=('Times', 11, 'bold'))
+            label = Label(addWindow, text=header, width=12, font=('Times', 11, 'bold'))
             # instruction for dates
             if (header == "date" or header=="dateOfBirth"):
-                format = Label(r, text="(format: yyyy-mm-dd)", width=15, font=('Times', 11, 'bold'))
+                format = Label(addWindow, text="(format: yyyy-mm-dd)", width=15, font=('Times', 11, 'bold'))
                 format.place(x=630, y=yas)
             label.place(x=400, y=yas)
             yas += 40
     except:
         mb.showerror("Failure", "No table selected")
-        r.destroy()
+        addWindow.destroy()
         
     def insert_data():
         try:
-            entries = get_all_entry(r)
+            entries = get_all_entry(addWindow)
             datalist = [entry.get() for entry in entries]
             q.insertrow(table, datalist, cursor)
             cnx.commit()
@@ -185,21 +186,21 @@ def add_data():
             #Success message
             mb.showinfo("Sucess", f"{table[:-1]} registered")
             #Empty all entry widgets
-            for widget in r.winfo_children():
+            for widget in addWindow.winfo_children():
                 if isinstance(widget, Entry):
                     widget.delete(0, "end")
         except:
             mb.showerror("Failure", "Incorrect insertion or empty box!")
 
-    deletebutton = tk.Button(r, text="Delete", command=lambda: delete_data(tree))
+    deletebutton = tk.Button(addWindow, text="Delete", command=lambda: delete_data(tree))
     deletebutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
     deletebutton.place(x=600, y=590)
 
-    submitbutton = tk.Button(r, text="Submit", command= insert_data)
+    submitbutton = tk.Button(addWindow, text="Submit", command= insert_data)
     submitbutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
     submitbutton.place(x=500, y=590)
 
-    cancelbutton = tk.Button(r, text="Cancel", command=r.destroy)
+    cancelbutton = tk.Button(addWindow, text="Cancel", command=addWindow.destroy)
     cancelbutton.configure(font=('Times', 11, 'bold'), bg='grey', fg='black')
     cancelbutton.place(x=550, y=630)
 
@@ -246,7 +247,7 @@ firName = Entry(window, width=10) # create entry
 firName.place(x=115, y=130)
 lasName = Entry(window, width=10) # create entry
 lasName.place(x=225, y=130)
-infoButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow>>', retrieveInfo(firName.get(), lasName.get())))
+infoButton = Button(window, text = "Choose", command = lambda: ('<<opentableWindow>>', retrieveInfo(firName.get(), lasName.get())))
 infoButton.place(x=175, y=160)
 
 # create entry to find when donors can donate next
@@ -257,7 +258,7 @@ frstName = Entry(window, width=10) # create entry
 frstName.place(x=115, y=230)
 lstName = Entry(window, width=10) # create entry
 lstName.place(x=225, y=230)
-nextdonButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow>>', retrieveNextDonation(frstName.get(), lstName.get())))
+nextdonButton = Button(window, text = "Choose", command = lambda: ('<<opentableWindow>>', retrieveNextDonation(frstName.get(), lstName.get())))
 nextdonButton.place(x=175, y=260)
 
 
@@ -269,7 +270,7 @@ fname = Entry(window, width=10)
 fname.place(x=115, y=330)
 lname = Entry(window, width=10)
 lname.place(x=225, y=330)
-nameButton = Button(window, text = "Choose", command = lambda: ('<<openNewWindow>>', retrieveGiving(fname.get(), lname.get())))
+nameButton = Button(window, text = "Choose", command = lambda: ('<<opentableWindow>>', retrieveGiving(fname.get(), lname.get())))
 nameButton.place(x=175, y=360)
 
 
